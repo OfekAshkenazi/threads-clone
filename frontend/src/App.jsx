@@ -4,7 +4,7 @@ export default function App() {
   return (
    <main>
     <h2>
-      hi
+      hiafafafafa
     </h2>
    </main>
   )
