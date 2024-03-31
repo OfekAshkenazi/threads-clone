@@ -1,4 +1,5 @@
-import { VStack, Box, Flex, Avatar, Text } from "@chakra-ui/react";
+import { VStack, Box, Flex, Avatar, Text, Link } from "@chakra-ui/react";
+import { BsInstagram } from 'react-icons/bs';
 
 export default function UserHeader() {
     return (
@@ -11,7 +12,7 @@ export default function UserHeader() {
                         ofek ashkenazi
                     </Text>
                     <Flex gap={2} alignItems={"center"} >
-                        <Text fontSize={"sm"}>10,000 followers</Text>
+                        <Text fontSize={"sm"}>ofekashkenazi.com</Text>
                         <Text fontSize={"xs"} bg={"gray.dark"} color={"gray.light"} p={1} borderRadius={"full"}>threads.net</Text>
                     </Flex>
                 </Box>
@@ -22,7 +23,30 @@ export default function UserHeader() {
 
             </Flex>
 
-            
+            <Text>
+                FullStack, frontend developer and a great person
+            </Text>
+
+            <Flex w={"full"} justifyContent={"space-between"}>
+
+                <Flex gap={2} alignItems={"center"}>
+
+                    <Text color={"gray.light"}>10k followers</Text>
+                    <Box w={1} h={1} bg={"gray.light"} borderRadius={"full"}></Box>
+                    <Link color={"gray.light"}>instagram.com</Link>
+
+                </Flex>
+
+                <Flex>
+                    
+                    <Box className="icon-container">
+                        <BsInstagram size={24} cursor={"pointer"} />
+                    </Box>
+
+                </Flex>
+
+            </Flex>
+
         </VStack>
     )
 }
