@@ -1,7 +1,10 @@
+import UserHeader from "../components/UserHeader";
+
 export default function UserPage() {
     return (
-        <section>
-            hh
-        </section>
+        <>
+            <UserHeader />
+
+        </>
     )
 }
