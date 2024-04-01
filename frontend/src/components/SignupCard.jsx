@@ -21,13 +21,27 @@ import { useSetRecoilState } from 'recoil'
 import authScreenAtom from '../atoms/auth.atom'
 
 
-
 export default function SignupCard() {
     const [showPassword, setShowPassword] = useState(false)
     const setAuthScreenState = useSetRecoilState(authScreenAtom)
+    const [inputs, setInputs] = useState({
+        name: "",
+        username: "",
+        email: "",
+        password: ""
+    })
 
     async function handleSignup() {
         try {
+            const res = await fetch("/api/users/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(inputs)
+            })
+
+            const data = await res.json()
 
         } catch (error) {
             console.log(error)
@@ -53,24 +67,24 @@ export default function SignupCard() {
                             <Box>
                                 <FormControl isRequired>
                                     <FormLabel>Full Name</FormLabel>
-                                    <Input type="text" />
+                                    <Input type="text" value={inputs.name} onChange={(e) => setInputs({...inputs, name: e.target.value})} />
                                 </FormControl>
                             </Box>
                             <Box>
                                 <FormControl isRequired>
                                     <FormLabel>Username</FormLabel>
-                                    <Input type="text" />
+                                    <Input type="text" value={inputs.username} onChange={(e) => setInputs({...inputs, username: e.target.value})}/>
                                 </FormControl>
                             </Box>
                         </HStack>
                         <FormControl isRequired>
                             <FormLabel>Email address</FormLabel>
-                            <Input type="email" />
+                            <Input type="email" value={inputs.email} onChange={(e) => setInputs({...inputs, email: e.target.value})} />
                         </FormControl>
                         <FormControl isRequired>
                             <FormLabel>Password</FormLabel>
                             <InputGroup>
-                                <Input type={showPassword ? 'text' : 'password'} />
+                                <Input type={showPassword ? 'text' : 'password'} value={inputs.password} onChange={(e) => setInputs({...inputs, password: e.target.value})} />
                                 <InputRightElement h={'full'}>
                                     <Button
                                         variant={'ghost'}
