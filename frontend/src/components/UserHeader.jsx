@@ -24,11 +24,11 @@ export default function UserHeader() {
             <Flex justifyContent={"space-between"} w={"full"}>
 
                 <Box>
-                    <Text fontSize={"2xl"} fontWeight={"bold"}>
+                    <Text fontSize={{base: "large", md:"1xl", lg:"2xl"}} fontWeight={"bold"}>
                         ofek ashkenazi
                     </Text>
                     <Flex gap={2} alignItems={"center"} >
-                        <Text fontSize={"sm"}>ofekashkenazi.com</Text>
+                        <Text fontSize={{base: "xs", md:"sm"}}>ofekashkenazi.com</Text>
                         <Text fontSize={"xs"} bg={"gray.dark"} color={"gray.light"} p={1} borderRadius={"full"}>threads.net</Text>
                     </Flex>
                 </Box>
