@@ -45,7 +45,7 @@ export async function login(req, res) {
 
         const user = await User.findOne({ username })
 
-        const isPasswordTheSame = await bcrypt.compare(password, user.password)
+        const isPasswordTheSame = await bcrypt.compare(password, user?.password || "")
 
         if (!user || !isPasswordTheSame) return res.status(400).json({ message: "Invalid username or password" })
 
@@ -61,5 +61,15 @@ export async function login(req, res) {
     } catch (error) {
         res.status(500).json({ message: error.message })
         console.log("error in login", error.message)
+    }
+}
+
+export async function logout(req, res) {
+    try {
+        res.cookie("jwt", "", { maxAge: 1 })
+        res.status(200).json({message: "User logged out"})
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+        console.log("error in logout", error.message)
     }
 }
