@@ -17,8 +17,22 @@ import {
 import { useState } from 'react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
+import { useSetRecoilState } from 'recoil'
+import authScreenAtom from '../atoms/auth.atom'
+
+
+
 export default function SignupCard() {
     const [showPassword, setShowPassword] = useState(false)
+    const setAuthScreenState = useSetRecoilState(authScreenAtom)
+
+    async function handleSignup() {
+        try {
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <Flex align={'center'} justify={'center'}>
@@ -37,7 +51,7 @@ export default function SignupCard() {
                     <Stack spacing={4}>
                         <HStack>
                             <Box>
-                                <FormControl  isRequired>
+                                <FormControl isRequired>
                                     <FormLabel>Full Name</FormLabel>
                                     <Input type="text" />
                                 </FormControl>
@@ -49,11 +63,11 @@ export default function SignupCard() {
                                 </FormControl>
                             </Box>
                         </HStack>
-                        <FormControl  isRequired>
+                        <FormControl isRequired>
                             <FormLabel>Email address</FormLabel>
                             <Input type="email" />
                         </FormControl>
-                        <FormControl  isRequired>
+                        <FormControl isRequired>
                             <FormLabel>Password</FormLabel>
                             <InputGroup>
                                 <Input type={showPassword ? 'text' : 'password'} />
@@ -74,13 +88,15 @@ export default function SignupCard() {
                                 color={'white'}
                                 _hover={{
                                     bg: useColorModeValue("gray.700", "gray.800"),
-                                }}>
+                                }}
+                                onClick={handleSignup}
+                            >
                                 Sign up
                             </Button>
                         </Stack>
                         <Stack pt={6}>
                             <Text align={'center'}>
-                                Already a user? <Link color={'blue.400'}>Login</Link>
+                                Already a user? <Link onClick={() => setAuthScreenState("login")} color={'blue.400'}>Login</Link>
                             </Text>
                         </Stack>
                     </Stack>
