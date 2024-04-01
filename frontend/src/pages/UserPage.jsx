@@ -5,7 +5,7 @@ export default function UserPage() {
     return (
         <>
             <UserHeader />
-            <UserPost />
+            <UserPost likes={600} replies={5} postImg="/post1.png"/>
 
         </>
     )

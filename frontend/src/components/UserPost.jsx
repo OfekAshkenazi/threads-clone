@@ -65,7 +65,7 @@ export default function UserPost() {
 
                     <Box borderRadius={6}
                         overflow={"hidden"} border={"1px solid"} borderColor={"gray.light"}>
-                        <Image src='/post1.webp' w={"full"} />
+                        <Image src='/post1.png' w={"full"} />
                     </Box>
 
                     <Flex gap={3} my={1}>
