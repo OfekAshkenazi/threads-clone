@@ -5,7 +5,7 @@ import ActionsButtons from './ActionsButtons';
 import { useState } from 'react';
 
 
-export default function UserPost() {
+export default function UserPost({ likes, replies, postImg, postTitle }) {
     const [liked, setLiked] = useState(false)
 
 
@@ -52,7 +52,7 @@ export default function UserPost() {
 
                     <Flex justifyContent={"space-between"} w={"full"}>
                         <Flex w={"full"} alignItems={"center"} >
-                            <Text fontSize={"sm"} fontWeight={"bold"} >ofekashkenazi</Text>
+                            <Text fontSize={"sm"} fontWeight={"bold"} >Ofek Ashkenazi</Text>
                             <Image src='/verified.png' w={4} h={4} ml={1} />
                         </Flex>
                         <Flex gap={4} alignItems={"center"}>
@@ -61,21 +61,23 @@ export default function UserPost() {
                         </Flex>
                     </Flex>
 
-                    <Text fontSize={"sm"}>This is a post</Text>
+                    <Text fontSize={"sm"}>{postTitle}</Text>
 
-                    <Box borderRadius={6}
-                        overflow={"hidden"} border={"1px solid"} borderColor={"gray.light"}>
-                        <Image src='/post1.png' w={"full"} />
-                    </Box>
+                    {postImg &&
+                        <Box borderRadius={6}
+                            overflow={"hidden"} border={"1px solid"} borderColor={"gray.light"}>
+                            <Image src={postImg} w={"full"} />
+                        </Box>
+                    }
 
                     <Flex gap={3} my={1}>
                         <ActionsButtons liked={liked} setLiked={setLiked} />
                     </Flex>
 
                     <Flex gap={2} alignItems={"center"}>
-                        <Text color={"gray.light"} fontSize={"sm"}>55 replies</Text>
+                        <Text color={"gray.light"} fontSize={"sm"}>{replies} replies</Text>
                         <Box w={0.5} h={0.5} borderRadius={"full"} bg={"gray.light"}></Box>
-                        <Text color={"gray.light"} fontSize={"sm"}>105 liked</Text>
+                        <Text color={"gray.light"} fontSize={"sm"}>{likes} liked</Text>
                     </Flex>
 
                 </Flex>
