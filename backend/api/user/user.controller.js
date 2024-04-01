@@ -30,11 +30,11 @@ export async function signup(req, res) {
                 username: newUser.username
             })
         } else {
-            res.status(400).json({ message: 'Invaild user data' })
+            res.status(400).json({ error: 'Invaild user data' })
         }
 
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ error: error.message })
         console.log("error in signup", error.message)
     }
 }
@@ -47,7 +47,7 @@ export async function login(req, res) {
 
         const isPasswordTheSame = await bcrypt.compare(password, user?.password || "")
 
-        if (!user || !isPasswordTheSame) return res.status(400).json({ message: "Invalid username or password" })
+        if (!user || !isPasswordTheSame) return res.status(400).json({ error: "Invalid username or password" })
 
         generateTokenAndSetCookie(user._id, res)
 
@@ -59,7 +59,7 @@ export async function login(req, res) {
         })
 
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ error: error.message })
         console.log("error in login", error.message)
     }
 }
