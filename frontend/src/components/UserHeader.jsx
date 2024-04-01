@@ -14,8 +14,8 @@ export default function UserHeader() {
                 description: "Profile link copied.",
                 duration: 1000,
                 isClosable: true,
-            });
-        });
+            })
+        })
     }
 
     return (
@@ -32,8 +32,10 @@ export default function UserHeader() {
                         <Text fontSize={"xs"} bg={"gray.dark"} color={"gray.light"} p={1} borderRadius={"full"}>threads.net</Text>
                     </Flex>
                 </Box>
+
+
                 <Box>
-                    <Avatar name="ofek ashkenazi" src="/post4.jpg" size={"xl"} />
+                    <Avatar name="ofek ashkenazi" src="/post4.jpg" size={{ base: "md", md: "xl" }} />
                 </Box>
 
 
