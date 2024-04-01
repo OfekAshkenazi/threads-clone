@@ -1,32 +1,21 @@
-import jwt from 'jsonwebtoken'
-import User from '../models/userModel.js'
+import User from "../models/userModel.js";
+import jwt from "jsonwebtoken";
 
 export async function requireAuth(req, res, next) {
     try {
         const token = req.cookies.jwt
 
-        if (!token) {
-            return res.status(401).json({ error: "Unauthorized - no token provided" })
-        }
+        if (!token) return res.status(401).json({ message: "Unauthorized" })
 
-        const decoded = jwt.verify(token, process.env.JWT_SECERT)
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
-        if (!decoded) {
-            return res.status(401).json({ error: "Unauthorized - invalid token" })
-        }
-
-        /// select will delete the password  when return it
         const user = await User.findById(decoded.userId).select("-password")
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found" })
-        }
 
         req.user = user
 
         next()
-
-    } catch (error) {
-        res.status(500).json({ error: "Internal server error" })
+    } catch (err) {
+        res.status(500).json({ message: err.message })
+        console.log("Error in signupUser: ", err.message)
     }
 }
