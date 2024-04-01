@@ -59,7 +59,9 @@ export default function PostPage() {
 
             <Divider my={4}/>
 
-            <Comment comment="Hey this lookes great!" createdAt="2d" likes={100} username="Thghostx" userAvatar="/post4.png"/>
+            <Comment comment="Hey this lookes great!" createdAt="2d" likes={10} username="Thghostx" userAvatar="/post4.png"/>
+            <Comment comment="this is the amazing shipon" createdAt="3d" likes={20} username="kingoftheheel" userAvatar="/post7.png"/>
+            <Comment comment="arrrrr!" createdAt="2d" likes={100} username="blackwiddow" userAvatar="/post2.png"/>
 
         </>
     )
