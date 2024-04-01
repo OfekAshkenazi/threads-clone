@@ -4,7 +4,7 @@ import Post from './../../models/postModel.js';
 export async function createPost(req, res) {
     try {
         const { postedBy, text, image } = req.body
-        
+
         if (!postedBy || !text) {
             return res.status(400).json({ message: "Pls fill all the text fields are required" })
         }
@@ -27,10 +27,46 @@ export async function createPost(req, res) {
 
         await newPost.save()
 
-        res.status(201).json({message: "Post created successfully", newPost})
+        res.status(201).json({ message: "Post created successfully", newPost })
 
     } catch (error) {
         res.status(500).json({ message: error.message })
         console.log("error in createPost", error.message)
+    }
+}
+
+export async function getPost(req, res) {
+    try {
+        const post = await Post.findById(req.params.id)
+
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" })
+        }
+
+        res.status(200).json({ post })
+
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+        console.log("error in getPost", error.message)
+    }
+}
+
+export async function deletePost(req,res) {
+    try {
+        const post = await Post.findById(req.params.id)
+        if(!post){
+            return res.status(404).json({message: "Post not found"})
+        }
+        if(post.postedBy.toString() !== req.user._id.toString()) {
+            return res.status(401).json({message: "Unauthorized to delete this post"})
+        }
+
+        await Post.findByIdAndDelete(req.params.id)
+
+        res.status(200).json({message: "Post delete successfully"})
+        
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+        console.log("error in deletePost", error.message)
     }
 }
