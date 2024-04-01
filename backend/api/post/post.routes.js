@@ -5,14 +5,11 @@ import { requireAuth } from "../../middleware/requireAuth.middleware.js"
 
 const router = express.Router()
 
+router.get("/feed", requireAuth, getFeedPosts)
 router.get("/:id", getPost)
-router.get("/:feed", requireAuth, getFeedPosts)
 router.post("/create", requireAuth, createPost)
+router.delete("/:id", requireAuth, deletePost)
 router.post("/like/:id", requireAuth, linkUnlinkPost)
 router.post("/reply/:id", requireAuth, replyToPost)
-router.delete("/:id", requireAuth, deletePost)
-
-
-
 
 export default router
