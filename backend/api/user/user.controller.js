@@ -100,8 +100,6 @@ export async function followUnFollowUser(req, res) {
 
         }
 
-
-
     } catch (error) {
         res.status(500).json({ message: error.message })
         console.log("error in logout", error.message)
@@ -136,5 +134,19 @@ export async function updateUser(req, res) {
     } catch (error) {
         res.status(500).json({ message: error.message })
         console.log("error in updateuser", error.message)
+    }
+}
+
+export async function getUserProfile(req, res) {
+    const { username } = req.params
+    try {
+        const user = await User.findOne({ username }).select("-password").select("-updatedAt")
+        if (!user) return res.status(400).json({ message: "user not found" })
+
+        res.status(200).json(user)
+
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+        console.log("error in userProfilePage", error.message)
     }
 }
