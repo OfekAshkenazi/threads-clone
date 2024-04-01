@@ -13,6 +13,7 @@ import {
     Text,
     useColorModeValue,
     Link,
+    useToast,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
@@ -22,14 +23,18 @@ import authScreenAtom from '../atoms/auth.atom'
 
 
 export default function SignupCard() {
-    const [showPassword, setShowPassword] = useState(false)
     const setAuthScreenState = useSetRecoilState(authScreenAtom)
+
+    const [showPassword, setShowPassword] = useState(false)
+
     const [inputs, setInputs] = useState({
         name: "",
         username: "",
         email: "",
         password: ""
     })
+
+    const toast = useToast()
 
     async function handleSignup() {
         try {
@@ -43,10 +48,33 @@ export default function SignupCard() {
 
             const data = await res.json()
 
+            if (data.error) {
+                toast({
+                    title: "Error",
+                    description: data.error,
+                    status: "error",
+                    duration: 1500,
+                    isClosable: true
+                })
+                return
+            }
+
+            localStorage.setItem("user", JSON.stringify(data))
+
+            toast({
+                title: "Success",
+                description: "Sign up successfully",
+                status: "success",
+                duration: 1500,
+                isClosable: true
+            })
+
         } catch (error) {
             console.log(error)
         }
     }
+
+
 
     return (
         <Flex align={'center'} justify={'center'}>
@@ -67,24 +95,24 @@ export default function SignupCard() {
                             <Box>
                                 <FormControl isRequired>
                                     <FormLabel>Full Name</FormLabel>
-                                    <Input type="text" value={inputs.name} onChange={(e) => setInputs({...inputs, name: e.target.value})} />
+                                    <Input type="text" value={inputs.name} onChange={(e) => setInputs({ ...inputs, name: e.target.value })} />
                                 </FormControl>
                             </Box>
                             <Box>
                                 <FormControl isRequired>
                                     <FormLabel>Username</FormLabel>
-                                    <Input type="text" value={inputs.username} onChange={(e) => setInputs({...inputs, username: e.target.value})}/>
+                                    <Input type="text" value={inputs.username} onChange={(e) => setInputs({ ...inputs, username: e.target.value })} />
                                 </FormControl>
                             </Box>
                         </HStack>
                         <FormControl isRequired>
                             <FormLabel>Email address</FormLabel>
-                            <Input type="email" value={inputs.email} onChange={(e) => setInputs({...inputs, email: e.target.value})} />
+                            <Input type="email" value={inputs.email} onChange={(e) => setInputs({ ...inputs, email: e.target.value })} />
                         </FormControl>
                         <FormControl isRequired>
                             <FormLabel>Password</FormLabel>
                             <InputGroup>
-                                <Input type={showPassword ? 'text' : 'password'} value={inputs.password} onChange={(e) => setInputs({...inputs, password: e.target.value})} />
+                                <Input type={showPassword ? 'text' : 'password'} value={inputs.password} onChange={(e) => setInputs({ ...inputs, password: e.target.value })} />
                                 <InputRightElement h={'full'}>
                                     <Button
                                         variant={'ghost'}
