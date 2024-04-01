@@ -35,7 +35,7 @@ export default function UserHeader() {
 
 
                 <Box>
-                    <Avatar name="ofek ashkenazi" src="/post4.jpg" size={{ base: "md", md: "xl" }} />
+                    <Avatar name="ofek ashkenazi" src="/post4.png" size={{ base: "md", md: "xl" }} />
                 </Box>
 
 

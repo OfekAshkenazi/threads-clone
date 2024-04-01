@@ -15,7 +15,7 @@ export default function UserPost({ likes, replies, postImg, postTitle }) {
             <Flex gap={3} mb={4} py={5} >
 
                 <Flex flexDirection={"column"} alignItems={"center"}>
-                    <Avatar size="md" name='ofek ashkenazi' src='/post4.jpg' />
+                    <Avatar size="md" name='ofek ashkenazi' src='/post4.png' />
                     <Box w="1px" h={"full"} bg={"gray.light"} my={2}></Box>
                     <Box position={"relative"} w={"full"} mr={1.5}>
                         <Avatar
