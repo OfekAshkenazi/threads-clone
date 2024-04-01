@@ -131,9 +131,20 @@ export async function replyToPost(req, res) {
     }
 }
 
-export async function getFeedPosts(req,res) {
+export async function getFeedPosts(req, res) {
     try {
+        const userId = req.user._id
+        const user = await User.findById(userId)
+
+        if (!user) {
+            return res.status(400).json({ message: "User not found" })
+        }
+
+        const following = user.following;
+        const feedPosts = await Post.find({ postedBy: { $in: following } }).sort({ createdAt: -1 })
         
+        res.status(200).json({ feedPosts })
+
     } catch (error) {
         res.status(500).json({ message: error.message })
         console.log("error in getFeedPosts", error.message)
