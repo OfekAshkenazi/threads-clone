@@ -17,7 +17,7 @@ import {
 import { useState } from 'react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
-export default function SignupCard() {
+export default function Login() {
     const [showPassword, setShowPassword] = useState(false)
 
     return (
@@ -25,33 +25,20 @@ export default function SignupCard() {
             <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
                 <Stack align={'center'}>
                     <Heading fontSize={'4xl'} textAlign={'center'}>
-                        Sign up
+                        Login
                     </Heading>
 
                 </Stack>
-                <Box
-                    rounded={'lg'}
-                    bg={useColorModeValue('white', 'gray.dark')}
-                    boxShadow={'lg'}
-                    p={8}>
+                <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.dark')} boxShadow={'lg'} p={8}
+                 w={{
+                    base:"full",
+                    sm:"400px"
+                 }} >
                     <Stack spacing={4}>
-                        <HStack>
-                            <Box>
-                                <FormControl  isRequired>
-                                    <FormLabel>Full Name</FormLabel>
-                                    <Input type="text" />
-                                </FormControl>
-                            </Box>
-                            <Box>
-                                <FormControl isRequired>
-                                    <FormLabel>Username</FormLabel>
-                                    <Input type="text" />
-                                </FormControl>
-                            </Box>
-                        </HStack>
+    
                         <FormControl  isRequired>
-                            <FormLabel>Email address</FormLabel>
-                            <Input type="email" />
+                            <FormLabel>User name</FormLabel>
+                            <Input type="text" />
                         </FormControl>
                         <FormControl  isRequired>
                             <FormLabel>Password</FormLabel>
@@ -75,12 +62,12 @@ export default function SignupCard() {
                                 _hover={{
                                     bg: useColorModeValue("gray.700", "gray.800"),
                                 }}>
-                                Sign up
+                                Login
                             </Button>
                         </Stack>
                         <Stack pt={6}>
                             <Text align={'center'}>
-                                Already a user? <Link color={'blue.400'}>Login</Link>
+                                Don't have an account? <Link color={'blue.400'}>Sign up</Link>
                             </Text>
                         </Stack>
                     </Stack>
