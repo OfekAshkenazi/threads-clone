@@ -1,9 +1,14 @@
 import { Avatar, Flex, Box, Text, Image } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { BsThreeDots } from 'react-icons/bs';
+import ActionsButtons from './ActionsButtons';
+import { useState } from 'react';
 
 
 export default function UserPost() {
+    const [liked, setLiked] = useState(false)
+
+
     return (
         <Link to={`/ofektheking/post/1`}>
 
@@ -44,6 +49,7 @@ export default function UserPost() {
                 </Flex>
 
                 <Flex flex={1} flexDirection={"column"} gap={2}>
+
                     <Flex justifyContent={"space-between"} w={"full"}>
                         <Flex w={"full"} alignItems={"center"} >
                             <Text fontSize={"sm"} fontWeight={"bold"} >ofekashkenazi</Text>
@@ -59,8 +65,18 @@ export default function UserPost() {
 
                     <Box borderRadius={6}
                         overflow={"hidden"} border={"1px solid"} borderColor={"gray.light"}>
-                            <Image src='/post1.webp' w={"full"}/>
-                        </Box>
+                        <Image src='/post1.webp' w={"full"} />
+                    </Box>
+
+                    <Flex gap={3} my={1}>
+                        <ActionsButtons liked={liked} setLiked={setLiked} />
+                    </Flex>
+
+                    <Flex gap={2} alignItems={"center"}>
+                        <Text color={"gray.light"} fontSize={"sm"}>55 replies</Text>
+                        <Box w={0.5} h={0.5} borderRadius={"full"} bg={"gray.light"}></Box>
+                        <Text color={"gray.light"} fontSize={"sm"}>105 liked</Text>
+                    </Flex>
 
                 </Flex>
 
