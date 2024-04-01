@@ -4,6 +4,7 @@ import UserPage from './pages/UserPage'
 import PostPage from './pages/PostPage'
 import Header from './components/Header'
 import HomePage from './pages/HomePage'
+import AuthPage from './pages/AuthPage'
 
 export default function App() {
 
@@ -14,6 +15,7 @@ export default function App() {
 
       <Routes>
         <Route path='/' element={<HomePage />} />
+        <Route path='/auth' element={<AuthPage />} />
         <Route path="/:username" element={<UserPage />} />
         <Route path="/:username/post/:pid" element={<PostPage />} />
 
