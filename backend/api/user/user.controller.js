@@ -1,3 +1,4 @@
+import generateTokenAndSetCookie from '../../services/createAndHandleToken.service.js';
 import User from './../../models/userModel.js';
 import bcrypt from "bcryptjs";
 
@@ -19,6 +20,9 @@ export async function signup(req, res) {
         await newUser.save()
 
         if (newUser) {
+
+            generateTokenAndSetCookie(newUser._id, res)
+
             res.status(201).json({
                 _id: newUser._id,
                 name: newUser.name,
@@ -26,7 +30,7 @@ export async function signup(req, res) {
                 username: newUser.username
             })
         } else {
-            res.status(400).json({message: 'Invaild user data'})
+            res.status(400).json({ message: 'Invaild user data' })
         }
 
     } catch (error) {
