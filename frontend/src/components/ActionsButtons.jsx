@@ -31,7 +31,7 @@ export default function ActionsButtons({ liked, setLiked }) {
                 role='img'
                 viewBox='0 0 24 24'
                 width='20'
-                onClick={onOpen}
+                onClick={() => console.log('onopen')}
             >
                 <title>Comment</title>
                 <path
