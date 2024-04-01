@@ -51,22 +51,51 @@ export async function getPost(req, res) {
     }
 }
 
-export async function deletePost(req,res) {
+export async function deletePost(req, res) {
     try {
         const post = await Post.findById(req.params.id)
-        if(!post){
-            return res.status(404).json({message: "Post not found"})
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" })
         }
-        if(post.postedBy.toString() !== req.user._id.toString()) {
-            return res.status(401).json({message: "Unauthorized to delete this post"})
+        if (post.postedBy.toString() !== req.user._id.toString()) {
+            return res.status(401).json({ message: "Unauthorized to delete this post" })
         }
 
         await Post.findByIdAndDelete(req.params.id)
 
-        res.status(200).json({message: "Post delete successfully"})
-        
+        res.status(200).json({ message: "Post delete successfully" })
+
     } catch (error) {
         res.status(500).json({ message: error.message })
         console.log("error in deletePost", error.message)
+    }
+}
+
+export async function linkUnlinkPost(req, res) {
+    try {
+        const { id: postId } = req.params
+        const userId = req.user._id
+
+        const post = await Post.findById(postId)
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" })
+        }
+
+        const userLikedPost = post.likes.includes(userId)
+
+
+        if (userLikedPost) {
+            await Post.updateOne({ _id: postId }, { $pull: { likes: userId } })
+            res.status(200).json({message: "post unlike successfully"})
+        } else {
+            post.likes.push(userId)
+            await post.save()
+            res.status(200).json({message: "post like successfully"})
+        }
+
+
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+        console.log("error in linkunlike", error.message)
     }
 }
