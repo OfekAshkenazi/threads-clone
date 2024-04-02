@@ -13,7 +13,7 @@ import LogOutButton from './components/LogOutButton'
 
 export default function App() {
   const user = useRecoilValue(userAtom)
-
+  
   return (
     <Container maxW={`620px`}>
 

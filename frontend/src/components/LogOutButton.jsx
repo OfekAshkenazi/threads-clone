@@ -9,7 +9,7 @@ export default function LogOutButton() {
 
     async function handleLogOut() {
         try {
-            const res = fetch("/api/users/logout", {
+            const res = await fetch("/api/users/logout", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -19,12 +19,15 @@ export default function LogOutButton() {
             const data = await res.json()
 
             if (data.error) {
-                showToast("Error",`cannot log out,: ${data.error} `,"error")
+                // showToast("Error",`cannot log out,: ${data.error} `,"error")
+                console.log(data.error)
             }
 
-            showToast("Success","log out successfully","suucess")
+            showToast("Success","log out successfully","success")
+
             localStorage.removeItem("user")
             setUser(null)
+
         } catch (error) {
             console.log(error)
         }

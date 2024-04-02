@@ -1,29 +1,55 @@
-import {
-    Flex,
-    Box,
-    FormControl,
-    FormLabel,
-    Input,
-    InputGroup,
-    HStack,
-    InputRightElement,
-    Stack,
-    Button,
-    Heading,
-    Text,
-    useColorModeValue,
-    Link,
-} from '@chakra-ui/react'
+import { Flex, Box, FormControl, FormLabel, Input, InputGroup, InputRightElement, Stack, Button, Heading, Text, useColorModeValue, Link, } from '@chakra-ui/react'
 
 import { useState } from 'react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
-import { useSetRecoilState } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import authScreenAtom from '../atoms/auth.atom'
+import useShowToast from './../hooks/useShowToast';
+import userAtom from '../atoms/user.atom'
 
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false)
     const setAuthScreenState = useSetRecoilState(authScreenAtom)
+    const showToast = useShowToast()
+    const setUser = useSetRecoilState(userAtom)
+    const [loading, setLoading] = useState(false)
+    const [inputs, setInputs] = useState({
+        username: "",
+        password: "",
+    })
+
+    async function handleLogin() {
+        if (!inputs.username.length > 2 || !inputs.password) return showToast('Error', 'please fill all the fileds', 'error')
+        setLoading(true)
+        try {
+            const res = await fetch("/api/users/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(inputs)
+            })
+
+            const data = await res.json()
+            if (data.error) {
+                showToast('Error', data.error, 'error')
+                return
+            }
+            localStorage.setItem("user", JSON.stringify(data))
+            setUser(data)
+
+
+
+        } catch (error) {
+            showToast("Error", error, "error")
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
 
     return (
         <Flex align={'center'} justify={'center'}>
@@ -43,12 +69,12 @@ export default function Login() {
 
                         <FormControl isRequired>
                             <FormLabel>User name</FormLabel>
-                            <Input type="text" />
+                            <Input type="text" value={inputs.username} onChange={(e) => setInputs({...inputs, username: e.target.value})} />
                         </FormControl>
                         <FormControl isRequired>
                             <FormLabel>Password</FormLabel>
                             <InputGroup>
-                                <Input type={showPassword ? 'text' : 'password'} />
+                                <Input type={showPassword ? 'text' : 'password'} value={inputs.password} onChange={(e) => setInputs({...inputs, password: e.target.value})}/>
                                 <InputRightElement h={'full'}>
                                     <Button
                                         variant={'ghost'}
@@ -66,7 +92,9 @@ export default function Login() {
                                 color={'white'}
                                 _hover={{
                                     bg: useColorModeValue("gray.700", "gray.800"),
-                                }}>
+                                }}
+                                onClick={handleLogin}
+                            >
                                 Login
                             </Button>
                         </Stack>

@@ -5,9 +5,9 @@ export default function useShowToast() {
 
     function showToast(title, description, status) {
         toast({
-            title,
-            description,
-            status,
+            title: title,
+            description: description,
+            status: status,
             duration: 1500,
             isClosable: true
         });
