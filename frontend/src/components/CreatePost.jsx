@@ -12,8 +12,10 @@ const MAX_CHAR = 500
 export default function CreatePost() {
     const [postText, setPostText] = useState("")
     const [remainingChar, setRemainingChar] = useState(MAX_CHAR)
+    const [loading, setLoading] = useState(false)
     const user = useRecoilValue(userAtom)
-    
+
+
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { handleImageChange, imageUrl, setImageUrl } = usePreviewImage()
     const showToast = useShowToast()
@@ -35,27 +37,32 @@ export default function CreatePost() {
     const imageRef = useRef(null)
 
     async function handleCreatePost() {
+        setLoading(true)
         try {
-            const res = await fetch("/api/posts/create",{
+            const res = await fetch("/api/posts/create", {
                 method: "POST",
-                headers:{
+                headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({postedBy: user._id, text: postText, image: imageUrl})
+                body: JSON.stringify({ postedBy: user._id, text: postText, image: imageUrl })
             })
 
             const data = await res.json()
 
-            if(data.error) {
-                showToast("Error",data.error,"error")
+            if (data.error) {
+                showToast("Error", data.error, "error")
                 return
             }
 
-            showToast("Success","Post created successfully","success")
+            showToast("Success", "Post created successfully", "success")
             onClose()
-
+            setPostText("")
+            setImageUrl("")
+            
         } catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -102,7 +109,7 @@ export default function CreatePost() {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme='blue' mr={3} onClick={handleCreatePost}>
+                        <Button colorScheme='blue' mr={3} onClick={handleCreatePost} isLoading={loading}>
                             Post
                         </Button>
                     </ModalFooter>
