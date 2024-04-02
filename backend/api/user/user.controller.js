@@ -27,7 +27,9 @@ export async function signup(req, res) {
                 _id: newUser._id,
                 name: newUser.name,
                 email: newUser.email,
-                username: newUser.username
+                username: newUser.username,
+                bio: newUser.bio,
+                profilePic: newUser.profilePic
             })
         } else {
             res.status(400).json({ error: 'Invaild user data' })
@@ -55,7 +57,9 @@ export async function login(req, res) {
             _id: user._id,
             name: user.name,
             email: user.email,
-            username: user.username
+            username: user.username,
+            bio: user.bio,
+            profilePic: user.profilePic
         })
 
     } catch (error) {
