@@ -13,14 +13,16 @@ export default function Login() {
     const setAuthScreenState = useSetRecoilState(authScreenAtom)
     const showToast = useShowToast()
     const setUser = useSetRecoilState(userAtom)
+
     const [loading, setLoading] = useState(false)
+
     const [inputs, setInputs] = useState({
         username: "",
         password: "",
     })
 
     async function handleLogin() {
-        if (!inputs.username.length > 2 || !inputs.password) return showToast('Error', 'please fill all the fileds', 'error')
+        if (!inputs.username || !inputs.password) return showToast('Error', 'please fill all the fileds', 'error')
         setLoading(true)
         try {
             const res = await fetch("/api/users/login", {
@@ -36,10 +38,9 @@ export default function Login() {
                 showToast('Error', data.error, 'error')
                 return
             }
+
             localStorage.setItem("user", JSON.stringify(data))
             setUser(data)
-
-
 
         } catch (error) {
             showToast("Error", error, "error")
