@@ -1,40 +1,24 @@
-import {
-    Flex,
-    Box,
-    FormControl,
-    FormLabel,
-    Input,
-    InputGroup,
-    HStack,
-    InputRightElement,
-    Stack,
-    Button,
-    Heading,
-    Text,
-    useColorModeValue,
-    Link,
-    useToast,
-} from '@chakra-ui/react'
+import { Flex, Box, FormControl, FormLabel, Input, InputGroup, HStack, InputRightElement, Stack, Button, Heading, Text, useColorModeValue, Link, } from '@chakra-ui/react'
 import { useState } from 'react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 
 import { useSetRecoilState } from 'recoil'
 import authScreenAtom from '../atoms/auth.atom'
+import useShowToast from '../hooks/useShowToast'
+
+
 
 
 export default function SignupCard() {
     const setAuthScreenState = useSetRecoilState(authScreenAtom)
-
     const [showPassword, setShowPassword] = useState(false)
-
+    const showToast = useShowToast()
     const [inputs, setInputs] = useState({
         name: "",
         username: "",
         email: "",
         password: ""
     })
-
-    const toast = useToast()
 
     async function handleSignup() {
         try {
@@ -49,32 +33,17 @@ export default function SignupCard() {
             const data = await res.json()
 
             if (data.error) {
-                toast({
-                    title: "Error",
-                    description: data.error,
-                    status: "error",
-                    duration: 1500,
-                    isClosable: true
-                })
+                showToast('There was an error in sign up',data.error,'Error')
                 return
             }
 
             localStorage.setItem("user", JSON.stringify(data))
-
-            toast({
-                title: "Success",
-                description: "Sign up successfully",
-                status: "success",
-                duration: 1500,
-                isClosable: true
-            })
+            showToast('Success',"Sign up successfully",'success')
 
         } catch (error) {
             console.log(error)
         }
     }
-
-
 
     return (
         <Flex align={'center'} justify={'center'}>

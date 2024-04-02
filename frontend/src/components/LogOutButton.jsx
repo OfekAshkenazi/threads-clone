@@ -1,9 +1,11 @@
 import { Button } from "@chakra-ui/react";
 import { useSetRecoilState } from "recoil";
 import userAtom from "../atoms/user.atom";
+import useShowToast from './../hooks/useShowToast';
 
 export default function LogOutButton() {
     const setUser = useSetRecoilState(userAtom)
+    const showToast = useShowToast()
 
     async function handleLogOut() {
         try {
@@ -17,10 +19,10 @@ export default function LogOutButton() {
             const data = await res.json()
 
             if (data.error) {
-                console.log(error)
+                showToast("Error",`cannot log out,: ${data.error} `,"error")
             }
-            console.log(data)
 
+            showToast("Success","log out successfully","suucess")
             localStorage.removeItem("user")
             setUser(null)
         } catch (error) {
