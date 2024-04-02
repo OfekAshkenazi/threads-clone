@@ -3,9 +3,11 @@ import { useRef, useState } from 'react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import { useRecoilState } from 'recoil'
 import userAtom from '../atoms/user.atom'
+import usePreviewImage from '../hooks/usePreviewImage'
 
 export default function UpdateProfilePage() {
     const [showPassword, setShowPassword] = useState(false)
+    const { handleImageChange, imageUrl } = usePreviewImage()
 
     const [user, setUser] = useRecoilState(userAtom)
 
@@ -40,12 +42,12 @@ export default function UpdateProfilePage() {
                     <Stack direction={['column', 'row']} spacing={6}>
 
                         <Center>
-                            <Avatar size="xl" src={user.profilePic} boxShadow={"md"}/>
+                            <Avatar size="xl" src={imageUrl || user.profilePic} boxShadow={"md"} />
                         </Center>
 
                         <Center w="full">
                             <Button onClick={() => fileRef.current.click()} w="full">Change Avatar</Button>
-                            <input type='file' hidden ref={fileRef}/>
+                            <input type='file' hidden ref={fileRef} onChange={handleImageChange} />
                         </Center>
 
                     </Stack>
@@ -62,7 +64,7 @@ export default function UpdateProfilePage() {
                         onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
                     />
                 </FormControl>
-                
+
                 <FormControl >
                     <FormLabel>User name</FormLabel>
                     <Input
@@ -99,7 +101,7 @@ export default function UpdateProfilePage() {
                     <InputGroup>
                         <Input type={showPassword ? 'text' : 'password'} value={inputs.password}
                             onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
-                             />
+                        />
                         <InputRightElement h={'full'}>
                             <Button
                                 variant={'ghost'}
