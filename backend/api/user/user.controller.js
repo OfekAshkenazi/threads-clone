@@ -159,12 +159,12 @@ export async function getUserProfile(req, res) {
     const { username } = req.params
     try {
         const user = await User.findOne({ username }).select("-password").select("-updatedAt")
-        if (!user) return res.status(400).json({ message: "user not found" })
+        if (!user) return res.status(400).json({ error: "user not found" })
 
         res.status(200).json(user)
 
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json(error)
         console.log("error in userProfilePage", error.message)
     }
 }
