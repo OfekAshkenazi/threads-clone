@@ -16,11 +16,11 @@ export default function usePreviewImage() {
 
             reader.readAsDataURL(file)
         } else {
-            showToast("Invalid file type","File must be image","error")
+            showToast("Invalid file type", "File must be image", "error")
             setImageUrl(null)
         }
 
     }
 
-    return { handleImageChange, imageUrl }
+    return { handleImageChange, imageUrl, setImageUrl }
 }

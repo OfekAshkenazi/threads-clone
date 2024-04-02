@@ -5,7 +5,6 @@ import userAtom from './../atoms/user.atom';
 
 export default function HomePage() {
     const user = useRecoilValue(userAtom)
-    console.log(user)
     return (
         <Link to={`/${user.username}`}>
             <Flex w={"full"} justifyContent={"center"}>
