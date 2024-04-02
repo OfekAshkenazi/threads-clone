@@ -95,6 +95,7 @@ export default function Login() {
                                     bg: useColorModeValue("gray.700", "gray.800"),
                                 }}
                                 onClick={handleLogin}
+                                isLoading={loading}
                             >
                                 Login
                             </Button>
