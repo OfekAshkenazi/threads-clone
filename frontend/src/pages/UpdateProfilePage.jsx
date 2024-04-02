@@ -1,69 +1,113 @@
-import { Button, Flex, FormControl, FormLabel, Heading, Input, Stack, useColorModeValue, Avatar, AvatarBadge, IconButton, Center, } from '@chakra-ui/react'
-import { SmallCloseIcon } from '@chakra-ui/icons'
+import { Button, Flex, FormControl, FormLabel, Heading, Input, InputRightElement, Stack, useColorModeValue, Avatar, Center, InputGroup } from '@chakra-ui/react'
+import { useRef, useState } from 'react'
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import { useRecoilState } from 'recoil'
+import userAtom from '../atoms/user.atom'
 
 export default function UpdateProfilePage() {
+    const [showPassword, setShowPassword] = useState(false)
+
+    const [user, setUser] = useRecoilState(userAtom)
+
+    const [inputs, setInputs] = useState({
+        name: user.name,
+        username: user.username,
+        email: user.email,
+        bio: user.bio,
+        profilePic: user.profilePic,
+        password: ''
+    })
+
+    const fileRef = useRef()
+
     return (
-        <Flex
-            minH={'100vh'}
-            align={'center'}
-            justify={'center'}
-            bg={useColorModeValue('gray.50', 'gray.800')}>
+        <Flex align={'center'} justify={'center'} my={6}>
             <Stack
                 spacing={4}
                 w={'full'}
                 maxW={'md'}
-                bg={useColorModeValue('white', 'gray.700')}
+                bg={useColorModeValue('white', 'gray.dark')}
                 rounded={'xl'}
                 boxShadow={'lg'}
                 p={6}
-                my={12}>
+            >
                 <Heading lineHeight={1.1} fontSize={{ base: '2xl', sm: '3xl' }}>
                     User Profile Edit
                 </Heading>
-                <FormControl id="userName">
-                    <FormLabel>User Icon</FormLabel>
+
+                <FormControl>
+
                     <Stack direction={['column', 'row']} spacing={6}>
+
                         <Center>
-                            <Avatar size="xl" src="https://bit.ly/sage-adebayo">
-                                <AvatarBadge
-                                    as={IconButton}
-                                    size="sm"
-                                    rounded="full"
-                                    top="-10px"
-                                    colorScheme="red"
-                                    aria-label="remove Image"
-                                    icon={<SmallCloseIcon />}
-                                />
-                            </Avatar>
+                            <Avatar size="xl" src={user.profilePic} boxShadow={"md"}/>
                         </Center>
+
                         <Center w="full">
-                            <Button w="full">Change Icon</Button>
+                            <Button onClick={() => fileRef.current.click()} w="full">Change Avatar</Button>
+                            <input type='file' hidden ref={fileRef}/>
                         </Center>
+
                     </Stack>
+
                 </FormControl>
-                <FormControl id="userName" isRequired>
-                    <FormLabel>User name</FormLabel>
+
+                <FormControl >
+                    <FormLabel>Full name</FormLabel>
                     <Input
-                        placeholder="UserName"
+                        placeholder="Full name"
                         _placeholder={{ color: 'gray.500' }}
                         type="text"
+                        value={inputs.name}
+                        onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
                     />
                 </FormControl>
-                <FormControl id="email" isRequired>
+                
+                <FormControl >
+                    <FormLabel>User name</FormLabel>
+                    <Input
+                        placeholder="User Name"
+                        _placeholder={{ color: 'gray.500' }}
+                        type="text"
+                        value={inputs.username}
+                        onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
+                    />
+                </FormControl>
+                <FormControl  >
                     <FormLabel>Email address</FormLabel>
                     <Input
                         placeholder="your-email@example.com"
                         _placeholder={{ color: 'gray.500' }}
                         type="email"
+                        value={inputs.email}
+                        onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
                     />
                 </FormControl>
-                <FormControl id="password" isRequired>
-                    <FormLabel>Password</FormLabel>
+                <FormControl >
+                    <FormLabel>Bio</FormLabel>
                     <Input
-                        placeholder="password"
+                        placeholder="Enter your bio"
                         _placeholder={{ color: 'gray.500' }}
-                        type="password"
+                        type="text"
+                        value={inputs.bio}
+                        onChange={(e) => setInputs({ ...inputs, bio: e.target.value })}
                     />
+                </FormControl>
+
+                <FormControl >
+                    <FormLabel>Password</FormLabel>
+                    <InputGroup>
+                        <Input type={showPassword ? 'text' : 'password'} value={inputs.password}
+                            onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
+                             />
+                        <InputRightElement h={'full'}>
+                            <Button
+                                variant={'ghost'}
+                                onClick={() => setShowPassword((showPassword) => !showPassword)}>
+                                {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                            </Button>
+                        </InputRightElement>
+                    </InputGroup>
                 </FormControl>
                 <Stack spacing={6} direction={['column', 'row']}>
                     <Button
