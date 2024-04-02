@@ -1,26 +1,34 @@
-import User from "../../models/userModel.js"
+import User from "../../models/userModel.js";
 import Post from './../../models/postModel.js';
+import { v2 as cloudinary } from 'cloudinary';
+
 
 export async function createPost(req, res) {
     try {
-        const { postedBy, text, image } = req.body
+        const { postedBy, text } = req.body
+        let { image } = req.body
 
         if (!postedBy || !text) {
-            return res.status(400).json({ message: "Pls fill all the text fields are required" })
+            return res.status(400).json({ error: "Pls fill all the text fields are required" })
         }
 
         const user = await User.findById(postedBy)
         if (!user) {
-            return res.status(404).json({ message: "User not found" })
+            return res.status(404).json({ error: "User not found" })
         }
 
         if (user._id.toString() !== req.user._id.toString()) {
-            return res.status(401).json({ message: "Unauthorized to create the post" })
+            return res.status(401).json({ error: "Unauthorized to create the post" })
         }
 
         const maxLength = 500
         if (text.length > maxLength) {
-            return res.status(400).json({ message: `text need to be less then ${maxLength}` })
+            return res.status(400).json({ error: `text need to be less then ${maxLength}` })
+        }
+
+        if(image) {
+            const uploadRes = await cloudinary.uploader.upload(image)
+            image = uploadRes.secure_url
         }
 
         const newPost = new Post({ postedBy, text, image })
@@ -30,7 +38,7 @@ export async function createPost(req, res) {
         res.status(201).json({ message: "Post created successfully", newPost })
 
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ error: error.message })
         console.log("error in createPost", error.message)
     }
 }
@@ -40,13 +48,13 @@ export async function getPost(req, res) {
         const post = await Post.findById(req.params.id)
 
         if (!post) {
-            return res.status(404).json({ message: "Post not found" })
+            return res.status(404).json({ error: "Post not found" })
         }
 
         res.status(200).json({ post })
 
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ error: error.message })
         console.log("error in getPost", error.message)
     }
 }
@@ -55,10 +63,10 @@ export async function deletePost(req, res) {
     try {
         const post = await Post.findById(req.params.id)
         if (!post) {
-            return res.status(404).json({ message: "Post not found" })
+            return res.status(404).json({ error: "Post not found" })
         }
         if (post.postedBy.toString() !== req.user._id.toString()) {
-            return res.status(401).json({ message: "Unauthorized to delete this post" })
+            return res.status(401).json({ error: "Unauthorized to delete this post" })
         }
 
         await Post.findByIdAndDelete(req.params.id)
@@ -66,7 +74,7 @@ export async function deletePost(req, res) {
         res.status(200).json({ message: "Post delete successfully" })
 
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ error: error.message })
         console.log("error in deletePost", error.message)
     }
 }
@@ -78,7 +86,7 @@ export async function linkUnlinkPost(req, res) {
 
         const post = await Post.findById(postId)
         if (!post) {
-            return res.status(404).json({ message: "Post not found" })
+            return res.status(404).json({ error: "Post not found" })
         }
 
         const userLikedPost = post.likes.includes(userId)
@@ -95,7 +103,7 @@ export async function linkUnlinkPost(req, res) {
 
 
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ error: error.message })
         console.log("error in linkunlike", error.message)
     }
 }
@@ -109,13 +117,13 @@ export async function replyToPost(req, res) {
         const username = req.user.username
 
         if (!text) {
-            return res.status(400).json({ message: "Text field is required" })
+            return res.status(400).json({ error: "Text field is required" })
         }
 
         const post = await Post.findById(postId)
 
         if (!post) {
-            return res.status(404).json({ message: "Post not found" })
+            return res.status(404).json({ error: "Post not found" })
         }
 
         const reply = { userId, text, userProfilePic, username }
@@ -126,7 +134,7 @@ export async function replyToPost(req, res) {
         res.status(200).json({ message: "Reply added successfully", post })
 
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        res.status(500).json({ error: error.message })
         console.log("error in replyToPost", error.message)
     }
 }
@@ -144,9 +152,9 @@ export async function getFeedPosts(req, res) {
         const feedPosts = await Post.find({ postedBy: { $in: following } }).sort({ createdAt: -1 });
 
         res.status(200).json({feedPosts});
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-        console.log("error in getFeedPosts", err.message)
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+        console.log("error in getFeedPosts", error.message)
 
     }
 }

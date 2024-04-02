@@ -119,9 +119,9 @@ export async function updateUser(req, res) {
 
     try {
         let user = await User.findById(userId)
-        if (!user) return res.status(400).json({ message: "User not found" })
+        if (!user) return res.status(400).json({ error: "User not found" })
 
-        if (req.params.id !== userId.toString()) return res.status(400).json({ message: "you cannot update other users profile" })
+        if (req.params.id !== userId.toString()) return res.status(400).json({ error: "you cannot update other users profile" })
 
         if (password) {
             const salt = await bcrypt.genSalt(10)
