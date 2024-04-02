@@ -1,9 +1,14 @@
-import { VStack, Box, Flex, Avatar, Text, Link, Menu, MenuButton, Portal, MenuList, MenuItem, useToast } from "@chakra-ui/react";
+import { VStack, Box, Flex, Avatar, Text, Link, Menu, MenuButton, Portal, MenuList, MenuItem, useToast, Button } from "@chakra-ui/react";
 import { BsInstagram } from 'react-icons/bs';
 import { CgMoreO } from 'react-icons/cg';
+import { useRecoilValue } from 'recoil';
+import userAtom from './../atoms/user.atom';
+import { Link as RouterLink } from 'react-router-dom'
 
 export default function UserHeader({ user }) {
     const toast = useToast()
+
+    const loggedInUser = useRecoilValue(userAtom)
 
     function copyUrl() {
         const currentUrl = window.location.href
@@ -52,6 +57,12 @@ export default function UserHeader({ user }) {
             <Text>
                 {user.bio}
             </Text>
+
+            {loggedInUser._id === user._id && (
+                <Link as={RouterLink} to={`/update`}>
+                    <Button size={"sm"}>Update Profile</Button>
+                </Link>
+            )}
 
             <Flex w={"full"} justifyContent={"space-between"}>
 
