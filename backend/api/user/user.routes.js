@@ -8,7 +8,7 @@ router.post("/signup", signup)
 router.post("/login", login)
 router.post("/logout", logout)
 router.post("/follow/:id", requireAuth, followUnFollowUser)
-router.post("/update/:id", requireAuth, updateUser)
+router.put("/update/:id", requireAuth, updateUser)
 router.get("/profile/:username", getUserProfile)
 
 
