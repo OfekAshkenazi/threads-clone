@@ -4,25 +4,65 @@ import { CgMoreO } from 'react-icons/cg';
 import { useRecoilValue } from 'recoil';
 import userAtom from './../atoms/user.atom';
 import { Link as RouterLink } from 'react-router-dom'
+import { useState } from "react";
+import useShowToast from "../hooks/useShowToast";
 
 export default function UserHeader({ user }) {
-    const toast = useToast()
-
+    const showToast = useShowToast()
     const loggedInUser = useRecoilValue(userAtom)
+    const [following, setFollowing] = useState(user.followers.includes(loggedInUser._id))
+    const [updating, setUpdating] = useState(false)
 
     function copyUrl() {
         const currentUrl = window.location.href
         navigator.clipboard.writeText(currentUrl).then(() => {
-            toast({
-                title: "Success.",
-                status: "success",
-                description: "Profile link copied.",
-                duration: 1000,
-                isClosable: true,
-            })
+            showToast("Success", "Profile link copied.", "success")
         })
     }
 
+    async function handleFollowUnfollow() {
+        if (!loggedInUser) {
+            showToast("Error", "Please login to follow", "error")
+            return
+        }
+
+        if(updating) return
+        setUpdating(true)
+
+        try {
+            const res = await fetch(`/api/users/follow/${user._id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+
+            const data = await res.json()
+
+            if (data.error) {
+                showToast("Error", data.error, "error")
+                return
+            }
+
+            /// only for frontend simulate adding and removing followrs.
+            if (following) {
+                showToast("Success", `Unfollowed ${user.name}`, "success")
+                user.followers.pop()
+            } else {
+                showToast("Success", `Followed ${user.name}`, "success")
+                user.followers.push(loggedInUser._id)
+
+            }
+
+            setFollowing(!following)
+
+
+        } catch (error) {
+            showToast("Error", error, "error")
+        }finally{
+            setUpdating(false)
+        }
+    }
 
     return (
         <VStack gap={4} alignItems={"start"}>
@@ -62,6 +102,11 @@ export default function UserHeader({ user }) {
                 <Link as={RouterLink} to={`/update`}>
                     <Button size={"sm"}>Update Profile</Button>
                 </Link>
+            )}
+
+            {loggedInUser._id !== user._id && (
+                <Button size={"sm"} isLoading={updating} onClick={handleFollowUnfollow}>{following ? "Unfollow" : "Follow"}</Button>
+
             )}
 
             <Flex w={"full"} justifyContent={"space-between"}>
