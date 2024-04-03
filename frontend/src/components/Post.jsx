@@ -4,12 +4,16 @@ import ActionsButtons from './ActionsButtons';
 import { useState, useEffect } from 'react';
 import useShowToast from '../hooks/useShowToast';
 import { formatDistanceToNow } from 'date-fns'
+import { DeleteIcon } from '@chakra-ui/icons';
+import { useRecoilValue } from 'recoil';
+import userAtom from '../atoms/user.atom';
 
 
 export default function Post({ post, postedBy }) {
     const showToast = useShowToast()
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(null)
+    const loggedInUser = useRecoilValue(userAtom)
 
     const navigate = useNavigate()
 
@@ -38,7 +42,30 @@ export default function Post({ post, postedBy }) {
             setLoading(false)
         }
     }
-    
+
+    async function handleDeletePost(e) {
+        e.preventDefault()
+        if(!window.confirm("Are you sure you want to delete this post?")) return
+        try {
+            const res = await fetch(`/api/posts/${post._id}`, {
+                method: "DELETE"
+            })
+
+            const data = res.json()
+
+            if (data.error) {
+                showToast("Error", "Cannot delete post", "error")
+            }
+
+            showToast("Success","The post has been removed","success")
+
+        } catch (error) {
+            showToast("Error", error, "error")
+            console.log(error)
+
+        }
+    }
+
     return (
         <Link to={`/${user?.username}/post/${post._id}`} title='Go to post page'>
 
@@ -47,7 +74,7 @@ export default function Post({ post, postedBy }) {
                 <Flex flexDirection={"column"} alignItems={"center"}>
                     <Avatar size="md" name={user?.name} src={user?.profilePic} onClick={(e) => {
                         e.preventDefault()
-                        navigate(`/${user.username}`)
+                        navigate(`/${user?.username}`)
                     }}
                         title='Go to user profile page'
                     />
@@ -97,7 +124,7 @@ export default function Post({ post, postedBy }) {
 
                             <Text fontSize={"sm"} fontWeight={"bold"} onClick={(e) => {
                                 e.preventDefault()
-                                navigate(`/${user.username}`)
+                                navigate(`/${user?.username}`)
                             }}
                             >
                                 {user?.username}
@@ -109,6 +136,10 @@ export default function Post({ post, postedBy }) {
                             <Text fontSize={"xs"} width={36} textAlign={"right"} color={"gray.light"} >
                                 {formatDistanceToNow(new Date(post.createdAt))} ago
                             </Text>
+
+                            {loggedInUser?._id === user?._id && (
+                                <DeleteIcon size={20} onClick={handleDeletePost} />
+                            )}
 
 
                         </Flex>
