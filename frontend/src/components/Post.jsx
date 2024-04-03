@@ -38,7 +38,7 @@ export default function Post({ post, postedBy }) {
             setLoading(false)
         }
     }
-
+    
     return (
         <Link to={`/${user?.username}/post/${post._id}`} title='Go to post page'>
 
@@ -53,19 +53,21 @@ export default function Post({ post, postedBy }) {
                     />
                     <Box w="1px" h={"full"} bg={"gray.light"} my={2}></Box>
                     <Box position={"relative"} w={"full"} mr={1.5}>
+
                         {post.replies[0] && (<Avatar
                             size={"xs"}
-                            name="ofek ashkenazi"
+                            name={post.replies[0].username}
                             src={post.replies[0].userProfilePic}
                             position={"absolute"}
                             top={"0px"}
                             left='15px'
                             padding={"2px"}
                         />)}
+
                         {post.replies[1] && (
                             <Avatar
                                 size={"xs"}
-                                name="ofek ashkenazi"
+                                name={post.replies[1].username}
                                 src={post.replies[1].userProfilePic}
                                 position={"absolute"}
                                 bottom={"0px"}
@@ -76,7 +78,7 @@ export default function Post({ post, postedBy }) {
                         {post.replies[2] && (
                             <Avatar
                                 size={"xs"}
-                                name="ofek ashkenazi"
+                                name={post.replies[2].username}
                                 src={post.replies[2].userProfilePic}
                                 position={"absolute"}
                                 bottom={"0px"}
@@ -105,7 +107,7 @@ export default function Post({ post, postedBy }) {
                         </Flex>
                         <Flex gap={4} alignItems={"center"}>
                             <Text fontSize={"xs"} width={36} textAlign={"right"} color={"gray.light"} >
-                            {formatDistanceToNow(new Date(post.createdAt))} ago
+                                {formatDistanceToNow(new Date(post.createdAt))} ago
                             </Text>
 
 
