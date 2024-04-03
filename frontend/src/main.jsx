@@ -14,7 +14,9 @@ const styles = {
     body: {
       color: mode("gray.800", "whiteAlpha.900")(props),
       bg: mode("gray.100", "#101010")(props),
+      fontFamily: `'Raleway', sans-serif`,
     },
+    heading: `'Open Sans', sans-serif`,
   }),
 }
 
@@ -30,7 +32,10 @@ const colors = {
   },
 }
 
-const mytheme = extendTheme({ config, styles, colors })
+const mytheme = extendTheme({ config, styles, colors, fonts: {
+  heading: "Open Sans,sans-serif",
+  body: "Raleway,sans-serif",
+} })
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

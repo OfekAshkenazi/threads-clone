@@ -1,16 +1,18 @@
 import { Avatar, Flex, Box, Text, Image } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
-import { BsThreeDots } from 'react-icons/bs';
+import { Link, useNavigate } from 'react-router-dom';
 import ActionsButtons from './ActionsButtons';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import useShowToast from '../hooks/useShowToast';
+import { formatDistanceToNow } from 'date-fns'
 
 
 export default function Post({ post, postedBy }) {
     const [liked, setLiked] = useState(false)
     const showToast = useShowToast()
     const [loading, setLoading] = useState(true)
+    const [user, setUser] = useState(null)
+
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -27,12 +29,11 @@ export default function Post({ post, postedBy }) {
                 return
             }
 
-            console.log(data)
-
-
+            setUser(data)
 
         } catch (error) {
             showToast("Error", error.message, "error")
+            setUser(null)
 
         } finally {
             setLoading(false)
@@ -40,41 +41,50 @@ export default function Post({ post, postedBy }) {
     }
 
     return (
-        <Link to={`/ofektheking/post/1`}>
+        <Link to={`/${user?.username}/post/${post._id}`} title='Go to post page'>
 
             <Flex gap={3} mb={4} py={5} >
 
                 <Flex flexDirection={"column"} alignItems={"center"}>
-                    <Avatar size="md" name='ofek ashkenazi' src='/post4.png' />
+                    <Avatar size="md" name={user?.name} src={user?.profilePic} onClick={(e) => {
+                        e.preventDefault()
+                        navigate(`/${user.username}`)
+                    }}
+                        title='Go to user profile page'
+                    />
                     <Box w="1px" h={"full"} bg={"gray.light"} my={2}></Box>
                     <Box position={"relative"} w={"full"} mr={1.5}>
-                        <Avatar
+                        {post.replies[0] && (<Avatar
                             size={"xs"}
                             name="ofek ashkenazi"
-                            src='https://bit.ly/dan-abramov'
+                            src={post.replies[0].userProfilePic}
                             position={"absolute"}
                             top={"0px"}
                             left='15px'
                             padding={"2px"}
-                        />
-                        <Avatar
-                            size={"xs"}
-                            name="ofek ashkenazi"
-                            src='https://bit.ly/sage-adebayo'
-                            position={"absolute"}
-                            bottom={"0px"}
-                            right='-5px'
-                            padding={"2px"}
-                        />
-                        <Avatar
-                            size={"xs"}
-                            name="ofek ashkenazi"
-                            src='https://bit.ly/prosper-baba'
-                            position={"absolute"}
-                            bottom={"0px"}
-                            left='4px'
-                            padding={"2px"}
-                        />
+                        />)}
+                        {post.replies[1] && (
+                            <Avatar
+                                size={"xs"}
+                                name="ofek ashkenazi"
+                                src={post.replies[1].userProfilePic}
+                                position={"absolute"}
+                                bottom={"0px"}
+                                right='-5px'
+                                padding={"2px"}
+                            />
+                        )}
+                        {post.replies[2] && (
+                            <Avatar
+                                size={"xs"}
+                                name="ofek ashkenazi"
+                                src={post.replies[2].userProfilePic}
+                                position={"absolute"}
+                                bottom={"0px"}
+                                left='4px'
+                                padding={"2px"}
+                            />
+                        )}
                     </Box>
                 </Flex>
 
@@ -82,12 +92,24 @@ export default function Post({ post, postedBy }) {
 
                     <Flex justifyContent={"space-between"} w={"full"}>
                         <Flex w={"full"} alignItems={"center"} >
-                            <Text fontSize={"sm"} fontWeight={"bold"} >Ofek Ashkenazi</Text>
+
+
+                            <Text fontSize={"sm"} fontWeight={"bold"} onClick={(e) => {
+                                e.preventDefault()
+                                navigate(`/${user.username}`)
+                            }}
+                            >
+                                {user?.username}
+                            </Text>
+
                             <Image src='/verified.png' w={4} h={4} ml={1} />
                         </Flex>
                         <Flex gap={4} alignItems={"center"}>
-                            <Text fontSize={"sm"} color={"gray.light"}>1d</Text>
-                            <BsThreeDots />
+                            <Text fontSize={"xs"} width={36} textAlign={"right"} color={"gray.light"} >
+                            {formatDistanceToNow(new Date(post.createdAt))} ago
+                            </Text>
+
+
                         </Flex>
                     </Flex>
 
