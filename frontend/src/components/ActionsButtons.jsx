@@ -42,7 +42,7 @@ export default function ActionsButtons({ post }) {
             }
 
             setLiked(!liked)
-        
+
 
         } catch (error) {
             showToast("Error", error.message, "error")
@@ -53,7 +53,7 @@ export default function ActionsButtons({ post }) {
 
     async function handleReply() {
         if (!user) return useShowToast("Error", "You must loggin to like a post", "error")
-        if(isReplying) return 
+        if (isReplying) return
         setIsReplying(true)
         try {
             const res = await fetch("/api/posts/reply/" + cmpPost._id, {
@@ -61,7 +61,7 @@ export default function ActionsButtons({ post }) {
                 headers: {
                     "Content-Type": "application/json"
                 },
-				body: JSON.stringify({ text: reply })
+                body: JSON.stringify({ text: reply })
             })
 
             const data = await res.json()
@@ -71,14 +71,14 @@ export default function ActionsButtons({ post }) {
                 return
             }
 
-            setCmpPost({...cmpPost, replies: [...cmpPost.replies, data]})
-            showToast("Success","Reply posted successfully","success")
+            setCmpPost({ ...cmpPost, replies: [...cmpPost.replies, data] })
+            showToast("Success", "Reply posted successfully", "success")
             onClose()
             setReply("")
 
         } catch (error) {
 
-        }finally {
+        } finally {
             setIsReplying(false)
         }
     }
@@ -125,6 +125,7 @@ export default function ActionsButtons({ post }) {
                         strokeWidth='2'
                     ></path>
                 </svg>
+
                 <RepostSVG />
                 <ShareSVG />
             </Flex>
@@ -140,7 +141,7 @@ export default function ActionsButtons({ post }) {
                 <ModalContent>
                     <ModalHeader></ModalHeader>
                     <ModalCloseButton />
-                    <ModalBody pb={6}>
+                    <ModalBody pb={6} mt={4}>
                         <FormControl>
                             <Input
                                 placeholder='Reply goes here..'
