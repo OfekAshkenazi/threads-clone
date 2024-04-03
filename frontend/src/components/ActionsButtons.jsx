@@ -7,7 +7,7 @@ import userAtom from './../atoms/user.atom';
 
 export default function ActionsButtons({ post }) {
     const user = useRecoilValue(userAtom)
-    const [liked, setLiked] = useState(post.likes.includes(user?._id))
+    const [liked, setLiked] = useState(post?.likes.includes(user?._id))
     const showToast = useShowToast()
     const [cmpPost, setCmpPost] = useState(post)
     const [loading, setLoading] = useState(false)
@@ -17,12 +17,12 @@ export default function ActionsButtons({ post }) {
 
 
     async function handleLikeUnlike() {
-        if (!user) return useShowToast("Error", "You must loggin to like a post", "error")
+        if (!user) return useShowToast("Error", "You must login to like a post", "error")
         if (loading) return
         setLoading(true)
 
         try {
-            const res = await fetch("/api/posts/like/" + cmpPost._id, {
+            const res = await fetch("/api/posts/like/" + post._id, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -36,9 +36,9 @@ export default function ActionsButtons({ post }) {
                 return
             }
             if (!liked) {
-                setCmpPost({ ...cmpPost, likes: [...post.likes, user?._id] })
+                setCmpPost({ ...cmpPost, likes: [...cmpPost.likes, user?._id] })
             } else {
-                setCmpPost({ ...cmpPost, likes: cmpPost.likes.filter(id => id !== user._id) })
+                setCmpPost({ ...cmpPost, likes: cmpPost.likes.filter(id => id !== user?._id) })
             }
 
             setLiked(!liked)
@@ -77,6 +77,7 @@ export default function ActionsButtons({ post }) {
             setReply("")
 
         } catch (error) {
+            showToast("Error", error.message, "error")
 
         } finally {
             setIsReplying(false)
@@ -131,9 +132,9 @@ export default function ActionsButtons({ post }) {
             </Flex>
 
             <Flex gap={2} alignItems={"center"} mt={2}>
-                <Text color={"gray.light"} fontSize={"sm"}>{cmpPost.replies.length} replies</Text>
+                <Text color={"gray.light"} fontSize={"sm"}>{cmpPost?.replies.length} replies</Text>
                 <Box w={0.5} h={0.5} borderRadius={"full"} bg={"gray.light"}></Box>
-                <Text color={"gray.light"} fontSize={"sm"}>{cmpPost.likes.length} liked</Text>
+                <Text color={"gray.light"} fontSize={"sm"}>{cmpPost?.likes.length} liked</Text>
             </Flex>
 
             <Modal isOpen={isOpen} onClose={onClose}>
