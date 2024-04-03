@@ -17,8 +17,6 @@ export default function UserPage() {
 
     }, [username, showToast])
 
-
-
     async function getUser() {
         try {
             const res = await fetch(`/api/users/profile/${username}`)
@@ -38,6 +36,10 @@ export default function UserPage() {
         }
     }
 
+    async function getPosts() {
+        
+    }
+
     if (!user && loading) {
         return (
             <Flex justifyContent={"center"}>
@@ -52,10 +54,10 @@ export default function UserPage() {
         <>
             <section>
                 <UserHeader user={user} />
-                <UserPost likes={600} replies={5} postImg="/post1.png" postTitle="Lets talk about one piece" />
+                {/* <UserPost likes={600} replies={5} postImg="/post1.png" postTitle="Lets talk about one piece" />
                 <UserPost likes={320} replies={15} postImg="/post2.png" postTitle="Lets talk about life" />
                 <UserPost likes={456} replies={2} postImg="/post3.png" postTitle="Lets talk about the kids in africa" />
-                <UserPost likes={551} replies={16} postImg="/post4.png" postTitle="Lets talk about life" />
+                <UserPost likes={551} replies={16} postImg="/post4.png" postTitle="Lets talk about life" /> */}
             </section>
         </>
 
