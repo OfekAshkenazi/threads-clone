@@ -1,4 +1,4 @@
-import { Flex, Text, Box } from "@chakra-ui/react";
+import { Box, Button, Flex, FormControl, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
 import useShowToast from "../hooks/useShowToast";
 import { useRecoilValue } from 'recoil';
@@ -9,12 +9,18 @@ export default function ActionsButtons({ post }) {
     const user = useRecoilValue(userAtom)
     const [liked, setLiked] = useState(post.likes.includes(user?._id))
     const showToast = useShowToast()
-    const [loading, setLoading] = useState(false)
     const [cmpPost, setCmpPost] = useState(post)
+    const [loading, setLoading] = useState(false)
+    const [reply, setReply] = useState("")
+    const [isReplying, setIsReplying] = useState(false)
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
 
     async function handleLikeUnlike() {
         if (!user) return useShowToast("Error", "You must loggin to like a post", "error")
+        if (loading) return
         setLoading(true)
+
         try {
             const res = await fetch("/api/posts/like/" + cmpPost._id, {
                 method: "PUT",
@@ -36,11 +42,44 @@ export default function ActionsButtons({ post }) {
             }
 
             setLiked(!liked)
+        
 
         } catch (error) {
             showToast("Error", error.message, "error")
         } finally {
             setLoading(false)
+        }
+    }
+
+    async function handleReply() {
+        if (!user) return useShowToast("Error", "You must loggin to like a post", "error")
+        if(isReplying) return 
+        setIsReplying(true)
+        try {
+            const res = await fetch("/api/posts/reply/" + cmpPost._id, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+				body: JSON.stringify({ text: reply })
+            })
+
+            const data = await res.json()
+
+            if (data.error) {
+                showToast("Error", data.error, "error")
+                return
+            }
+
+            setCmpPost({...cmpPost, replies: [...cmpPost.replies, data]})
+            showToast("Success","Reply posted successfully","success")
+            onClose()
+            setReply("")
+
+        } catch (error) {
+
+        }finally {
+            setIsReplying(false)
         }
     }
 
@@ -74,8 +113,8 @@ export default function ActionsButtons({ post }) {
                     role='img'
                     viewBox='0 0 24 24'
                     width='20'
-                    onClick={() => console.log('onopen')}
                     cursor={"pointer"}
+                    onClick={onOpen}
                 >
                     <title>Comment</title>
                     <path
@@ -95,6 +134,31 @@ export default function ActionsButtons({ post }) {
                 <Box w={0.5} h={0.5} borderRadius={"full"} bg={"gray.light"}></Box>
                 <Text color={"gray.light"} fontSize={"sm"}>{cmpPost.likes.length} liked</Text>
             </Flex>
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader></ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody pb={6}>
+                        <FormControl>
+                            <Input
+                                placeholder='Reply goes here..'
+                                value={reply}
+                                onChange={(e) => setReply(e.target.value)}
+                            />
+                        </FormControl>
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='blue' size={"sm"} mr={3} isLoading={isReplying} onClick={handleReply}>
+                            Reply
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+
 
         </Flex>
 
