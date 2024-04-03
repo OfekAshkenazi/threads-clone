@@ -9,7 +9,7 @@ router.get("/feed", requireAuth, getFeedPosts)
 router.get("/:id", getPost)
 router.post("/create", requireAuth, createPost)
 router.delete("/:id", requireAuth, deletePost)
-router.post("/like/:id", requireAuth, likeUnlikePost)
-router.post("/reply/:id", requireAuth, replyToPost)
+router.put("/like/:id", requireAuth, likeUnlikePost)
+router.put("/reply/:id", requireAuth, replyToPost)
 
 export default router
