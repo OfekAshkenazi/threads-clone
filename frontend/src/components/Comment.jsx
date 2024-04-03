@@ -1,11 +1,8 @@
 import { Avatar, Divider, Flex, Text } from "@chakra-ui/react"
-import { useState } from "react"
 import { BsThreeDots } from "react-icons/bs"
 import ActionsButtons from "./ActionsButtons"
 
 export default function Comment({ comment, createdAt, likes, username, userAvatar }) {
-    const [liked, setLiked] = useState()
-
 
     return (
         <>
@@ -25,8 +22,8 @@ export default function Comment({ comment, createdAt, likes, username, userAvata
                 </Flex>
 
                 <Text>{comment}</Text>
-                <ActionsButtons liked={liked} setLiked={setLiked} />
-                <Text fontSize={"sm"} color={"gray.light"}> {likes + (liked ? 1 : 0)} likes</Text>
+                {/* <ActionsButtons  /> */}
+                <Text fontSize={"sm"} color={"gray.light"}> {likes} likes</Text>
             </Flex>
 
             <Divider my={4} />
