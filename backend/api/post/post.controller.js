@@ -62,11 +62,16 @@ export async function getPost(req, res) {
 export async function deletePost(req, res) {
     try {
         const post = await Post.findById(req.params.id)
+
         if (!post) {
             return res.status(404).json({ error: "Post not found" })
         }
         if (post.postedBy.toString() !== req.user._id.toString()) {
             return res.status(401).json({ error: "Unauthorized to delete this post" })
+        }
+        if(post.image){
+            const imgId = post.image.split("/").pop().split(".")[0]
+            await cloudinary.uploader.destroy(imgId)
         }
 
         await Post.findByIdAndDelete(req.params.id)
