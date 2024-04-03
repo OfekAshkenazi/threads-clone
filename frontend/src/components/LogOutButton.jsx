@@ -30,7 +30,6 @@ export default function LogOutButton() {
 
             localStorage.removeItem("user")
             setUser(null)
-            navi("/")
 
         } catch (error) {
             console.log(error)
