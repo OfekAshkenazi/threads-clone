@@ -2,6 +2,7 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { Box, Flex, Text, Input, InputRightElement, Button, InputGroup, useColorModeValue, SkeletonCircle, Skeleton } from "@chakra-ui/react";
 import Conversation from "../components/Conversation";
 import { GiConversation } from 'react-icons/gi'
+import MessageContainer from "../components/MessageContainer";
 
 export default function ChatPage() {
     return (
@@ -54,13 +55,15 @@ export default function ChatPage() {
 
                 </Flex>
 
-
+{/* 
                 <Flex flex={70} borderRadius={"md"} p={2} flexDirection={"column"} alignItems={"center"} justifyContent={"center"} h={"400px"}>
                     <GiConversation size={95}/>
                     <Text fontSize={20}>Select a conversation</Text>
-                </Flex>
+                </Flex> */}
 
-                
+                <MessageContainer />
+
+
             </Flex>
         </Box>
     )
