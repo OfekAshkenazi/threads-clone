@@ -89,7 +89,7 @@ export default function ActionsButtons({ post }) {
             }
             const updatedPosts = posts.map((p) => {
                 if (p._id === post._id) {
-                    return { ...p, replies: [data, ...p.replies] }
+                    return { ...p, replies: [...p.replies, data] }
                 }
                 return p
             })
