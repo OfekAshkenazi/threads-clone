@@ -1,39 +1,56 @@
-import { Flex, Image, useColorMode, Link } from "@chakra-ui/react";
-import { useRecoilValue } from 'recoil';
+import { Flex, Image, useColorMode, Link, Button } from "@chakra-ui/react";
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import userAtom from './../atoms/user.atom';
 import { AiFillHome } from 'react-icons/ai'
 import { RxAvatar } from 'react-icons/rx'
 import { Link as RouterLink } from 'react-router-dom'
-import { FiLogIn } from "react-icons/fi";
+import { FiLogIn, FiLogOut } from "react-icons/fi";
+import useLogout from "../hooks/useLogout";
+import authScreenAtom from './../atoms/auth.atom';
 
 
 
 export default function Header() {
     const { colorMode, toggleColorMode } = useColorMode()
     const loggedInUser = useRecoilValue(userAtom)
+    const { handleLogOut } = useLogout()
+    const setAuthScreen = useSetRecoilState(authScreenAtom);
 
     return (
         <Flex justifyContent={"space-between"} mt={6} mb={4}>
 
             {loggedInUser &&
-                <Link as={RouterLink} to="/">
+                <Link as={RouterLink} to="/" title="home page">
                     <AiFillHome size={24} />
                 </Link>
             }
 
-            <Image cursor={"pointer"} alt="logo" src={colorMode === "dark" ? '/light-logo.svg' : "/dark-logo.svg"} onClick={toggleColorMode} w={6} />
+            {!loggedInUser && (
+                <Link as={RouterLink} to={"/auth"} onClick={() => setAuthScreen("login")}>
+                    Login
+                </Link>
+            )}
+
+            <Image title="Change dark/light mode" cursor={"pointer"} alt="logo" src={colorMode === "dark" ? '/light-logo.svg' : "/dark-logo.svg"} onClick={toggleColorMode} w={6} />
 
             {loggedInUser &&
-                <Link as={RouterLink} to={`/${loggedInUser.username}`}>
-                    <RxAvatar size={24} />
-                </Link>
+                <Flex alignItems={"center"} gap={2}>
+                    <Link as={RouterLink} to={`/${loggedInUser.username}`}>
+                        <RxAvatar size={24} title="Profile page" />
+                    </Link>
+
+                    <Button size={"sm"} onClick={handleLogOut} title="Logout">
+                        <FiLogOut size={17} />
+                    </Button>
+                </Flex>
             }
 
             {!loggedInUser && (
-                <Link as={RouterLink} to="/auth">
-                    <FiLogIn  size={24} />
+                <Link as={RouterLink} to={"/auth"} onClick={() => setAuthScreen("signup")}>
+                    signup
                 </Link>
             )}
+
 
 
         </Flex>

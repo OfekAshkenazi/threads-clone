@@ -9,7 +9,6 @@ import AuthPage from './pages/AuthPage'
 
 import { useRecoilValue } from 'recoil'
 import userAtom from './atoms/user.atom'
-import LogOutButton from './components/LogOutButton'
 import UpdateProfilePage from './pages/UpdateProfilePage'
 import CreatePost from './components/CreatePost'
 
@@ -29,10 +28,6 @@ export default function App() {
         <Route path="/:username/post/:pid" element={<PostPage />} />
 
       </Routes>
-
-      {user && <LogOutButton />}
-
-
 
     </Container>
   )
