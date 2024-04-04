@@ -1,4 +1,4 @@
-import { VStack, Box, Flex, Avatar, Text, Link, Menu, MenuButton, Portal, MenuList, MenuItem, useToast, Button } from "@chakra-ui/react";
+import { VStack, Box, Flex, Avatar, Text, Link, Menu, MenuButton, Portal, MenuList, MenuItem, useToast, Button, useColorModeValue } from "@chakra-ui/react";
 import { BsInstagram } from 'react-icons/bs';
 import { CgMoreO } from 'react-icons/cg';
 import { useRecoilValue } from 'recoil';
@@ -121,19 +121,19 @@ export default function UserHeader({ user }) {
 
                 <Flex>
 
-                    <Box className="icon-container">
+                    <Box className="icon-container" _hover={{ backgroundColor: useColorModeValue("gray.300", "gray.700") }} title="instagram link">
                         <BsInstagram size={24} cursor={"pointer"} />
                     </Box>
 
 
-                    <Box className="icon-container">
+                    <Box className="icon-container" _hover={{ backgroundColor: useColorModeValue("gray.300", "gray.700") }} title="threads link">
                         <Menu>
-                            <MenuButton>
+                            <MenuButton >
                                 <CgMoreO size={24} cursor={"pointer"} />
                             </MenuButton>
                             <Portal>
                                 <MenuList bg={"gray.dark"}>
-                                    <MenuItem bg={"gray.dark"} onClick={copyUrl}>Copy link</MenuItem>
+                                    <MenuItem bg={"gray.dark"}  onClick={copyUrl}>Copy link</MenuItem>
                                 </MenuList>
                             </Portal>
                         </Menu>
