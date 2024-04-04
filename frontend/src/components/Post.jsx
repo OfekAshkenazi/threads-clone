@@ -9,7 +9,7 @@ import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/user.atom';
 
 
-export default function Post({ post, postedBy, setPosts }) {
+export default function Post({ post, postedBy }) {
     const showToast = useShowToast()
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(null)
@@ -58,7 +58,7 @@ export default function Post({ post, postedBy, setPosts }) {
             }
 
             showToast("Success", "The post has been removed", "success")
-            setPosts((prevPosts) => prevPosts.filter((p) => p._id !== post._id))
+            // setPosts((prevPosts) => prevPosts.filter((p) => p._id !== post._id))
 
         } catch (error) {
             showToast("Error", error, "error")
@@ -156,7 +156,7 @@ export default function Post({ post, postedBy, setPosts }) {
                     }
 
                     <Flex gap={3} my={1}>
-                        <ActionsButtons post={post} />
+                        <ActionsButtons post={post}  />
                     </Flex>
 
                 </Flex>

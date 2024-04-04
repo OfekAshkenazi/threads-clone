@@ -61,7 +61,7 @@ export default function UserPage() {
             )}
 
             {posts.map((post) => {
-                return <Post key={post._id} post={post} postedBy={post.postedBy} setPosts={setPosts}/>
+                return <Post key={post._id} post={post} postedBy={post.postedBy} />
             })}
         </>
 
