@@ -1,15 +1,16 @@
 import { Link } from 'react-router-dom';
 import { Button, Flex, Spinner } from '@chakra-ui/react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import userAtom from './../atoms/user.atom';
 import { useEffect, useState } from 'react';
 import useShowToast from '../hooks/useShowToast';
 import Post from './../components/Post';
+import postsAtom from '../atoms/posts.atom';
 
 export default function HomePage() {
     const user = useRecoilValue(userAtom)
     const showToast = useShowToast()
-    const [posts, setPosts] = useState([])
+    const [posts, setPosts] = useRecoilState(postsAtom)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {

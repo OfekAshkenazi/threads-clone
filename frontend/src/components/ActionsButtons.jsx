@@ -49,7 +49,7 @@ export default function ActionsButtons({ post }) {
             } else {
                 const updatedPosts = posts.map((p) => {
                     if (p._id === post._id) {
-                        return { ...p, likes: p.likes.filter((id) => id !== user_id) }
+                        return { ...p, likes: p.likes.filter((id) => id !== user._id) }
                     }
                     return p
                 })
