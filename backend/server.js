@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 
 import userRoutes from './api/user/user.routes.js'
 import postRoutes from './api/post/post.routes.js'
+import messageRoutes from './api/message/message.routes.js'
 
 import { v2 as cloudinary } from 'cloudinary'
 
@@ -32,6 +33,7 @@ app.use(cookieParser())
 //Routes
 app.use("/api/users", userRoutes)
 app.use("/api/posts", postRoutes)
+app.use("/api/message", messageRoutes)
 
 
 
