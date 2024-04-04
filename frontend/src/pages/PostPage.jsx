@@ -27,6 +27,7 @@ export default function PostPage() {
     }, [showToast, pid, setPosts])
 
     async function getPost() {
+        setPosts([])
         try {
             const res = await fetch(`/api/posts/${pid}`)
             const data = await res.json()

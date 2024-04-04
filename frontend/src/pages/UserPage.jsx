@@ -22,6 +22,7 @@ export default function UserPage() {
     }, [username, showToast, setPosts])
 
     async function getPosts() {
+        setPosts([])
         try {
             const res = await fetch(`/api/posts/user/${username}`)
             const data = await res.json()
