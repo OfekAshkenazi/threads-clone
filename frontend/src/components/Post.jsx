@@ -9,7 +9,7 @@ import { useRecoilValue } from 'recoil';
 import userAtom from '../atoms/user.atom';
 
 
-export default function Post({ post, postedBy }) {
+export default function Post({ post, postedBy, setPosts }) {
     const showToast = useShowToast()
     const [loading, setLoading] = useState(true)
     const [user, setUser] = useState(null)
@@ -45,7 +45,7 @@ export default function Post({ post, postedBy }) {
 
     async function handleDeletePost(e) {
         e.preventDefault()
-        if(!window.confirm("Are you sure you want to delete this post?")) return
+        if (!window.confirm("Are you sure you want to delete this post?")) return
         try {
             const res = await fetch(`/api/posts/${post._id}`, {
                 method: "DELETE"
@@ -57,7 +57,8 @@ export default function Post({ post, postedBy }) {
                 showToast("Error", "Cannot delete post", "error")
             }
 
-            showToast("Success","The post has been removed","success")
+            showToast("Success", "The post has been removed", "success")
+            setPosts((prevPosts) => prevPosts.filter((p) => p._id !== post._id))
 
         } catch (error) {
             showToast("Error", error, "error")
