@@ -2,7 +2,7 @@ import Conversation from './../../models/conversationModel.js';
 import Message from './../../models/messageModel.js';
 
 
-export default async function sendMessage() {
+export default async function sendMessage(req,res) {
     try {
         const { recipientId, message } = req.body
         const senderId = req.user._id
@@ -26,6 +26,8 @@ export default async function sendMessage() {
         })
 
         await Promise.all([newMessage.save(), conversation.updateOne({ lastMessage: { text: message, sender: senderId } })])
+
+        res.status(201).json(newMessage)
 
     } catch (error) {
         res.status(500).json({ error: error.message })
