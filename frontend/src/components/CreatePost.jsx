@@ -3,9 +3,10 @@ import { Button, useColorModeValue, useDisclosure, Modal, ModalOverlay, ModalCon
 import { useRef, useState } from "react";
 import usePreviewImage from "../hooks/usePreviewImage";
 import { BsFillImageFill } from "react-icons/bs";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/user.atom";
 import useShowToast from "../hooks/useShowToast";
+import postsAtom from './../atoms/posts.atom';
 
 const MAX_CHAR = 500
 
@@ -14,6 +15,7 @@ export default function CreatePost() {
     const [remainingChar, setRemainingChar] = useState(MAX_CHAR)
     const [loading, setLoading] = useState(false)
     const user = useRecoilValue(userAtom)
+    const [posts, setPosts] = useRecoilState(postsAtom)
 
 
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -53,12 +55,12 @@ export default function CreatePost() {
                 showToast("Error", data.error, "error")
                 return
             }
-
             showToast("Success", "Post created successfully", "success")
+            setPosts([data.newPost, ...posts])
             onClose()
             setPostText("")
             setImageUrl("")
-            
+
         } catch (error) {
             console.log(error)
         } finally {
