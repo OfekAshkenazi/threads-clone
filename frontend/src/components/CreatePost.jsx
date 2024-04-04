@@ -73,12 +73,12 @@ export default function CreatePost() {
             <Button
                 position={"fixed"}
                 bottom={10}
-                right={10}
-                leftIcon={<AddIcon />}
+                right={5}
                 bg={useColorModeValue("gray.300", "gray.dark")}
                 onClick={onOpen}
+                size={{ base: "sm", sm: "sm", md: "md" }}
             >
-                Post
+                <AddIcon />
             </Button>
 
             <Modal isOpen={isOpen} onClose={onClose}>
