@@ -2,7 +2,7 @@ import Conversation from './../../models/conversationModel.js';
 import Message from './../../models/messageModel.js';
 
 
-export async function sendMessage(req,res) {
+export async function sendMessage(req, res) {
     try {
         const { recipientId, message } = req.body
         const senderId = req.user._id
@@ -32,22 +32,22 @@ export async function sendMessage(req,res) {
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
-} 
+}
 
-export async function getMessages(req,res) {
-    const {otherUserId} = req.params
+export async function getMessages(req, res) {
+    const { otherUserId } = req.params
     const userId = req.user._id
     try {
 
-    const conversation = await Conversation.findOne({
-        participants:{$all:[userId,otherUserId]}
-    })  
+        const conversation = await Conversation.findOne({
+            participants: { $all: [userId, otherUserId] }
+        })
 
-    if(!conversation) return res.status(404).json({error: "Conversation not found"})
-    
-    const messages = await Message.find({ conversationId:conversation._id }).sort({createdAt:1})
+        if (!conversation) return res.status(404).json({ error: "Conversation not found" })
 
-    res.status(200).json(messages)
+        const messages = await Message.find({ conversationId: conversation._id }).sort({ createdAt: 1 })
+
+        res.status(200).json(messages)
 
 
     } catch (error) {
@@ -56,15 +56,20 @@ export async function getMessages(req,res) {
     }
 }
 
-export async function getConversations(req,res) {
+export async function getConversations(req, res) {
     const userId = req.user._id
     try {
-        const conversations = await Conversation.find({participants: userId}).populate({
-            path:"participants",
-            select:"username profilePic",
+        const conversations = await Conversation.find({ participants: userId }).populate({
+            path: "participants",
+            select: "username profilePic",
         })
 
-        if(!conversations) return res.status(404).json({error: "Conversations not found"})
+        if (!conversations) return res.status(404).json({ error: "Conversations not found" })
+
+        conversations.forEach(c => {
+            c.participants.filter(p => p._id.toString() !== userId.toString())
+        })
+
 
         res.status(200).json(conversations)
     } catch (error) {
