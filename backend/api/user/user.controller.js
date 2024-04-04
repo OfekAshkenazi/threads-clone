@@ -1,5 +1,6 @@
 import generateTokenAndSetCookie from '../../services/createAndHandleToken.service.js';
 import User from './../../models/userModel.js';
+import Post from './../../models/postModel.js';
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from 'cloudinary'
 import mongoose from "mongoose";
@@ -147,6 +148,17 @@ export async function updateUser(req, res) {
 
         user = await user.save()
 
+        await Post.updateMany(
+            { "replies.userId": userId },
+            {
+                $set: {
+                    "replies.$[reply].username": user.username,
+                    "replies.$[reply].userProfilePic": user.profilePic,
+                }
+            },
+            { arrayFilters: [{ "reply.userId": userId }] }
+        )
+
 
         user.password = null
         res.status(200).json({ message: "Profile updated successfully", user })
@@ -162,7 +174,7 @@ export async function getUserProfile(req, res) {
 
     try {
         let user
-		if (mongoose.Types.ObjectId.isValid(query)) {
+        if (mongoose.Types.ObjectId.isValid(query)) {
             user = await User.findOne({ _id: query }).select("-password").select("-updatedAt")
 
         } else {
