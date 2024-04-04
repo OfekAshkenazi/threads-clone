@@ -1,7 +1,7 @@
-import { Avatar, Divider, Flex, Text } from "@chakra-ui/react"
+import { Avatar, Divider, Flex, Text, useColorModeValue } from "@chakra-ui/react"
 
-export default function Comment({ reply }) {
-
+export default function Comment({ reply, lastReply }) {
+    console.log(lastReply)
     return (
         <>
             <Flex gap={4} py={2} my={2} w={"full"} alignItems={"center"}>
@@ -16,8 +16,7 @@ export default function Comment({ reply }) {
                 </Flex>
             </Flex>
 
-            <Divider my={4} />
-
+            {!lastReply ? <Divider borderColor={useColorModeValue('gray.light', 'gray.dark')} /> : null}
         </>
 
     )

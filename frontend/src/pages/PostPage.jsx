@@ -125,7 +125,7 @@ export default function PostPage() {
             <Divider my={4} />
 
             {post.replies.map((reply) => {
-                return <Comment reply={reply} key={reply._id} />
+                return <Comment reply={reply} key={reply._id} lastReply={reply._id === post.replies[post.replies.length -1]._id}/>
             })}
 
 
