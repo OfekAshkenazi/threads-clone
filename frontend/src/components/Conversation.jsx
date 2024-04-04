@@ -2,7 +2,7 @@ import { Avatar, AvatarBadge, Flex, Image, Stack, Text, WrapItem, useColorModeVa
 
 export default function Conversation() {
     return (
-        <Flex gap={4} alignItems={"center"} p={1} _hover={{ cursor: "pointer", bg: useColorModeValue("gray.600", "gray.dark") }} color={"white"} borderRadius={"md"}>
+        <Flex gap={4} alignItems={"center"} p={1} _hover={{ cursor: "pointer", bg: useColorModeValue("gray.400", "gray.800") }} color={"white"} borderRadius={"md"}>
 
             <WrapItem>
                 <Avatar size={{ base: "xs", sm: "sm", md: "md" }} src="hhtps://bit.ly/borken-link">
