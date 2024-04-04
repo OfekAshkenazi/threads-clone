@@ -1,15 +1,16 @@
 import { Box, Button, Flex, FormControl, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
 import useShowToast from "../hooks/useShowToast";
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import userAtom from './../atoms/user.atom';
+import postsAtom from './../atoms/posts.atom';
 
 
 export default function ActionsButtons({ post }) {
     const user = useRecoilValue(userAtom)
     const [liked, setLiked] = useState(post?.likes.includes(user?._id))
+    const [posts, setPosts] = useRecoilState(postsAtom)
     const showToast = useShowToast()
-    const [cmpPost, setCmpPost] = useState(post)
     const [loading, setLoading] = useState(false)
     const [reply, setReply] = useState("")
     const [isReplying, setIsReplying] = useState(false)
@@ -36,9 +37,25 @@ export default function ActionsButtons({ post }) {
                 return
             }
             if (!liked) {
-                setCmpPost({ ...cmpPost, likes: [...cmpPost.likes, user?._id] })
+                const updatedPosts = posts.map((p) => {
+                    if (p._id === post._id) {
+                        return { ...p, likes: [...p.likes, user._id] }
+                    }
+                    return p
+                })
+
+
+                setPosts(updatedPosts)
             } else {
-                setCmpPost({ ...cmpPost, likes: cmpPost.likes.filter(id => id !== user?._id) })
+                const updatedPosts = posts.map((p) => {
+                    if (p._id === post._id) {
+                        return { ...p, likes: p.likes.filter((id) => id !== user_id) }
+                    }
+                    return p
+                })
+
+                setPosts(updatedPosts)
+
             }
 
             setLiked(!liked)
@@ -56,7 +73,7 @@ export default function ActionsButtons({ post }) {
         if (isReplying) return
         setIsReplying(true)
         try {
-            const res = await fetch("/api/posts/reply/" + cmpPost._id, {
+            const res = await fetch("/api/posts/reply/" + post._id, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -70,8 +87,14 @@ export default function ActionsButtons({ post }) {
                 showToast("Error", data.error, "error")
                 return
             }
+            const updatedPosts = posts.map((p) => {
+                if (p._id === post._id) {
+                    return { ...p, replies: [data, ...p.replies] }
+                }
+                return p
+            })
 
-            setCmpPost({ ...cmpPost, replies: [...cmpPost.replies, data] })
+            setPosts(updatedPosts)
             showToast("Success", "Reply posted successfully", "success")
             onClose()
             setReply("")
@@ -132,9 +155,9 @@ export default function ActionsButtons({ post }) {
             </Flex>
 
             <Flex gap={2} alignItems={"center"} mt={2}>
-                <Text color={"gray.light"} fontSize={"sm"}>{cmpPost?.replies.length} replies</Text>
+                <Text color={"gray.light"} fontSize={"sm"}>{post?.replies.length} replies</Text>
                 <Box w={0.5} h={0.5} borderRadius={"full"} bg={"gray.light"}></Box>
-                <Text color={"gray.light"} fontSize={"sm"}>{cmpPost?.likes.length} liked</Text>
+                <Text color={"gray.light"} fontSize={"sm"}>{post?.likes.length} liked</Text>
             </Flex>
 
             <Modal isOpen={isOpen} onClose={onClose}>
