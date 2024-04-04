@@ -2,8 +2,35 @@ import { SearchIcon } from "@chakra-ui/icons";
 import { Box, Flex, Text, Input, InputRightElement, Button, InputGroup, useColorModeValue, SkeletonCircle, Skeleton } from "@chakra-ui/react";
 import Conversation from "../components/Conversation";
 import MessageContainer from "../components/MessageContainer";
+import { useEffect, useState } from 'react';
+import useShowToast from './../hooks/useShowToast';
 
 export default function ChatPage() {
+    const showToast = useShowToast()
+    const [loading,setLoading] = useState(true)
+
+    useEffect(() => {
+        getConversations()
+    }, [])
+
+    async function getConversations() {
+        try {
+            const res = await fetch("/api/messages/conversations")
+            const data = await res.json()
+            if (data.error) {
+                showToast("Error", "Cannot find conversations", "error")
+                return
+            }
+            console.log(data)
+
+        } catch (error) {
+            showToast("Error", "Cannot find conversations", "error")
+        }finally{
+            setLoading(false)
+        }
+    }
+
+
     return (
         <Box position={"absolute"} left={"50%"} w={{ base: "100%", md: "80%", lg: "750px" }} transform={"translateX(-50%)"} p={4}>
             <Flex gap={4} flexDirection={{ base: "column", md: "row" }} maxW={{ sm: "400px", md: "full" }} mx={"auto"} >
@@ -27,7 +54,7 @@ export default function ChatPage() {
                         </Flex>
                     </form>
 
-                    {false && (
+                    {loading && (
                         [0, 1, 2, 3, 4].map((_, idx) => {
                             return (
                                 <Flex key={idx} gap={4} alignItems={"center"} p={1} borderRadius={"md"}>
@@ -48,13 +75,11 @@ export default function ChatPage() {
                         })
                     )}
 
-                    <Conversation />
-                    <Conversation />
-                    <Conversation />
+                    {!loading &&  <Conversation />}
 
                 </Flex>
 
-{/* 
+                {/* 
                 <Flex flex={70} borderRadius={"md"} p={2} flexDirection={"column"} alignItems={"center"} justifyContent={"center"} h={"400px"}>
                     <GiConversation size={95}/>
                     <Text fontSize={20}>Select a conversation</Text>
