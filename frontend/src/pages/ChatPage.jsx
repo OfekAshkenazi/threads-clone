@@ -87,6 +87,10 @@ export default function ChatPage() {
                         )
                     })}
 
+                    {/* {!loading && !conversations && (
+                        <h1>no conversation...</h1>
+                    )} */}
+
                 </Flex>
 
                 {!selectedConversation._id && (

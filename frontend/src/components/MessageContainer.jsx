@@ -21,6 +21,7 @@ export default function MessageContainer() {
     }, [selectedConversation])
 
     async function getMessages() {
+        setMessages([])
         try {
             const res = await fetch(`/api/messages/${selectedConversation.userId}`)
             const data = await res.json()
@@ -43,12 +44,10 @@ export default function MessageContainer() {
     return (
         <Flex flex={70} bg={useColorModeValue("gary.100", "gray.dark")} borderRadius={"md"} flexDirection={"column"} p={2}>
 
-
-            msgheader
-
             <Flex w={"full"} h={12} alignItems={"center"} gap={2}>
-                <Avatar src="hhtps://bit.ly/broken-link" size={"sm"} />
-                <Text display={"flex"} alignItems={"center"}>username <Image src="/verified.png" h={4} ml={1} /></Text>
+                <Avatar src={selectedConversation.userProfilePic} size={"sm"} />
+
+                <Text display={"flex"} alignItems={"center"}>{selectedConversation.username} <Image src="/verified.png" h={4} ml={1} /></Text>
 
             </Flex>
 
@@ -87,7 +86,7 @@ export default function MessageContainer() {
 
             </Flex>
 
-            <MessageInput />
+            <MessageInput setMessages={setMessages}/>
         </Flex>
     )
 }
