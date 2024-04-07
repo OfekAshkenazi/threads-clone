@@ -11,8 +11,22 @@ const io = new Server(server, {
 })
 
 
+const useScoketMap = {}
+
 io.on("connection", (socket) => {
-    console.log("user connected", socket.id)
+    console.log("user connected")
+
+    const userId = socket.handshake.query.userId
+    if (userId != "undefined") {
+        useScoketMap[userId] = socket.id
+    }
+    // convert the objectMap to an array and puts the keys in the array.
+    io.emit("getOnlineUsers", Object.keys(useScoketMap))
+
+
+    socket.on("disconnect", () => {
+        console.log("user disconnect")
+    })
 })
 
 export { io, server, app }

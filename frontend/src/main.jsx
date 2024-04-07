@@ -41,7 +41,7 @@ const mytheme = extendTheme({
 })
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
 
     <RecoilRoot>
 
@@ -63,5 +63,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
     </RecoilRoot>
 
-  </React.StrictMode>
+  // {/* </React.StrictMode> */}
 )
