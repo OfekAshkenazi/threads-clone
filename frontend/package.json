@@ -16,6 +16,7 @@
     "@emotion/styled": "^11.11.5",
     "@fontsource/open-sans": "^5.0.27",
     "@fontsource/raleway": "^5.0.17",
+    "backend": "file:..",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.0.24",
     "react": "^18.2.0",

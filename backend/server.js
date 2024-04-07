@@ -1,3 +1,4 @@
+import path from "path"
 import express from "express"
 import dotenv from "dotenv"
 import connectDB from "./db/connectDB.js"
@@ -16,6 +17,7 @@ connectDB()
 
 
 const PORT = process.env.PORT || 5000
+const __dirname = path.resolve()
 
 
 cloudinary.config({
@@ -36,5 +38,15 @@ app.use("/api/posts", postRoutes)
 app.use("/api/messages", messageRoutes)
 
 
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "/frontend/dist")));
+    console.log("got to prod")
 
-server.listen(PORT, () => { console.log(`server running on localhost:${PORT}`) })
+	// react app
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+	});
+}
+
+
+server.listen(PORT, () => console.log(`Server started at http://localhost:${PORT}`));
