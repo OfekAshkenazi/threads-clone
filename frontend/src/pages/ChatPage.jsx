@@ -23,6 +23,27 @@ export default function ChatPage() {
     const { socket, onlineUsers } = useSocket()
 
     useEffect(() => {
+        socket?.on("messagesSeen", ({ conversationId }) => {
+            setConversations((prevConversations) => {
+                const updatedConversations = prevConversations.map((c) => {
+                    if (c._id === conversationId) {
+                        return {
+                            ...c,
+                            lastMessage: {
+                                ...c.lastMessage,
+                                seen: true
+                            }
+                        }
+                    }
+                    return c
+                })
+
+                return updatedConversations
+            })
+        })
+    }, [socket, setConversations])
+
+    useEffect(() => {
         getConversations()
     }, [setConversations])
 
@@ -158,7 +179,7 @@ export default function ChatPage() {
 
                     {!loading && conversations.map((c) => {
                         return (
-                            <Conversation key={c._id} conversation={c} isOnline={c.participants[0]._id === loggedInUser?._id ?  onlineUsers.includes(c.participants[1]._id) : onlineUsers.includes(c.participants[0]._id)} />
+                            <Conversation key={c._id} conversation={c} isOnline={c.participants[0]._id === loggedInUser?._id ? onlineUsers.includes(c.participants[1]._id) : onlineUsers.includes(c.participants[0]._id)} />
                         )
                     })}
 
