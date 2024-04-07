@@ -4,8 +4,10 @@ import MessageInput from './MessageInput';
 import { useEffect, useState } from "react";
 import useShowToast from "../hooks/useShowToast";
 import selectedConversationAtom from "../atoms/selectedConversation.atom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from "../atoms/user.atom";
+import { useSocket } from './../context/SocketContext';
+import conversationsAtom from "../atoms/conversations.atom";
 
 export default function MessageContainer() {
     const [loading, setLoading] = useState(true)
@@ -13,6 +15,34 @@ export default function MessageContainer() {
     const [selectedConversation, setSlectedConversation] = useRecoilState(selectedConversationAtom)
     const [messages, setMessages] = useState([])
     const loggedInUser = useRecoilValue(userAtom)
+    const { socket } = useSocket()
+    const setConversations = useSetRecoilState(conversationsAtom)
+
+
+    useEffect(() => {
+        socket?.on("newMessage", (message) => {
+            setMessages((prevMessages) => [...prevMessages, message])
+            setConversations((prevConversations) => {
+                const updatedConverSations = prevConversations.map((c) => {
+                    if (c._id === selectedConversation._id) {
+                        return {
+                            ...c,
+                            lastMessage: {
+                                text: message.text,
+                                sender: message.sender
+                            }
+                        }
+                    }
+                    return c
+                })
+
+                return updatedConverSations
+            })
+        })
+        return () => {
+            socket.off("newMessage")
+        }
+    }, [socket])
 
     useEffect(() => {
         getMessages()
@@ -82,7 +112,7 @@ export default function MessageContainer() {
                     })
                 )}
 
-                {!loading &&  messages && (
+                {!loading && messages && (
                     messages.map((message) => {
                         return (
                             <Message key={message._id} message={message} ownMessage={loggedInUser._id === message.sender} />

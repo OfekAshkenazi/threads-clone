@@ -10,24 +10,27 @@ const io = new Server(server, {
     }
 })
 
+export const getRecipientSocketId = (recipientId) => {
+    return userScoketMap[recipientId]
+}
 
-const useScoketMap = {}
+const userScoketMap = {}
 
 io.on("connection", (socket) => {
     console.log("user connected")
     const userId = socket.handshake.query.userId
 
     if (userId != "undefined") {
-        useScoketMap[userId] = socket.id
+        userScoketMap[userId] = socket.id
     }
     // convert the objectMap to an array and puts the keys in the array.
-    io.emit("getOnlineUsers", Object.keys(useScoketMap))
+    io.emit("getOnlineUsers", Object.keys(userScoketMap))
 
 
     socket.on("disconnect", () => {
         console.log("user disconnect")
-        delete useScoketMap[userId]
-        io.emit("getOnlineUsers", Object.keys(useScoketMap))
+        delete userScoketMap[userId]
+        io.emit("getOnlineUsers", Object.keys(userScoketMap))
     })
 })
 
