@@ -26,7 +26,10 @@ export default function MessageContainer() {
 
     useEffect(() => {
         socket?.on("newMessage", (message) => {
-            setMessages((prevMessages) => [...prevMessages, message])
+            if(selectedConversation._id === message.conversationId) {
+                setMessages((prevMessages) => [...prevMessages, message])
+            }
+            
             setConversations((prevConversations) => {
                 const updatedConverSations = prevConversations.map((c) => {
                     if (c._id === selectedConversation._id) {
