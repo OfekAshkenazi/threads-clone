@@ -9,6 +9,7 @@ export default function Conversation({ conversation }) {
     const lastMessage = conversation.lastMessage
     const loggedInUser = useRecoilValue(userAtom)
     const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom)
+    // const user = conversation.participants[0]._id === loggedInUser._id ? conversation.participants[1] : conversation.participants[0]
 
     return (
         <Flex

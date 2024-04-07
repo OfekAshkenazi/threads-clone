@@ -4,16 +4,21 @@ import Conversation from "../components/Conversation";
 import MessageContainer from "../components/MessageContainer";
 import { useEffect, useState } from 'react';
 import useShowToast from './../hooks/useShowToast';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import conversationsAtom from './../atoms/conversations.atom';
 import selectedConversationAtom from './../atoms/selectedConversation.atom';
 import { GiConversation } from "react-icons/gi";
+import userAtom from "../atoms/user.atom";
 
 export default function ChatPage() {
-    const showToast = useShowToast()
-    const [loading, setLoading] = useState(true)
     const [conversations, setConversations] = useRecoilState(conversationsAtom)
     const [selectedConversation, setSlectedConversation] = useRecoilState(selectedConversationAtom)
+    const loggedInUser = useRecoilValue(userAtom)
+
+    const [loading, setLoading] = useState(true)
+    const [searchText, setSearchText] = useState("")
+    const [searchLoading, setSearchLoading] = useState(false)
+    const showToast = useShowToast()
 
     useEffect(() => {
         getConversations()
@@ -36,6 +41,49 @@ export default function ChatPage() {
         }
     }
 
+    async function handleConversationsSearch(e) {
+        e.preventDefault()
+        setSearchLoading(true)
+
+        try {
+            const res = await fetch(`/api/users/profile/${searchText}`)
+
+            const searchedUser = await res.json()
+
+            if (searchedUser.error) {
+                showToast("Error", searchedUser.error, "error")
+                return
+            }
+
+
+            if (searchedUser._id === loggedInUser._id) {
+                showToast("Error", "you cant yet sending messages to yourself")
+                return
+            }
+
+            const conversationExists = conversations.find(conversation => conversation.participants[0]._id === searchedUser._id)
+            // when you allready have conversation with that user
+            if (conversationExists) {
+                setSlectedConversation({
+                    _id: conversationExists._id,
+                    userId: searchedUser._id,
+                    username: searchedUser.username,
+                    userProfilePic: searchedUser.profilePic
+                })
+                return
+            }
+
+
+
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setSearchLoading(false)
+            setSearchText("")
+        }
+
+    }
+
 
     return (
         <Box position={"absolute"} left={"50%"} w={{ base: "100%", md: "80%", lg: "750px" }} transform={"translateX(-50%)"} p={4}>
@@ -46,12 +94,12 @@ export default function ChatPage() {
                         Conversations
                     </Text>
 
-                    <form>
+                    <form onSubmit={handleConversationsSearch}>
                         <Flex alignItems={"center"}>
                             <InputGroup>
-                                <Input placeholder="Search for a user" />
+                                <Input placeholder="Search for a user" onChange={(e) => setSearchText(e.target.value)} value={searchText} />
                                 <InputRightElement h={'full'}>
-                                    <Button variant={'ghost'}>
+                                    <Button variant={'ghost'} onClick={handleConversationsSearch} isLoading={searchLoading}>
                                         <SearchIcon />
 
                                     </Button>
