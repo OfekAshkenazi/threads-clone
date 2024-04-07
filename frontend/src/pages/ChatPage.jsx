@@ -102,8 +102,6 @@ export default function ChatPage() {
                 return
             }
 
-            // console.log(searchedUser)
-
             const mockConversation = {
                 _id: Date.now(),
                 mock: true,
@@ -120,9 +118,6 @@ export default function ChatPage() {
 
             setConversations((prevConversations) => [mockConversation, ...prevConversations])
 
-
-
-
         } catch (error) {
             console.log(error)
         } finally {
@@ -131,7 +126,6 @@ export default function ChatPage() {
         }
 
     }
-
 
     return (
         <Box position={"absolute"} left={"50%"} w={{ base: "100%", md: "80%", lg: "750px" }} transform={"translateX(-50%)"} p={4}>

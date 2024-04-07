@@ -4,8 +4,8 @@ import useLogout from "../hooks/useLogout";
 
 
 export default function SettingsPage() {
-    const showToast = useShowToast();
-    const {logout} = useLogout();
+    const showToast = useShowToast()
+    const {logout} = useLogout()
 
     async function freezeAccount() {
         if (!window.confirm("Are you sure you want to freeze your account?")) return
@@ -13,7 +13,7 @@ export default function SettingsPage() {
             const res = await fetch("/api/users/freeze", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-            });
+            })
             const data = await res.json();
 
             if (data.error) {
@@ -24,7 +24,7 @@ export default function SettingsPage() {
                 showToast("Success", "Your account has been frozen", "success")
             }
         } catch (error) {
-            showToast("Error", error.message, "error");
+            showToast("Error", error.message, "error")
         }
 
     }
