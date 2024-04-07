@@ -6,12 +6,12 @@ import userAtom from './../atoms/user.atom';
 import { Link as RouterLink } from 'react-router-dom'
 import { useState } from "react";
 import useShowToast from "../hooks/useShowToast";
+import useFollowUnFollow from "../hooks/useFollowUnFollow";
 
 export default function UserHeader({ user }) {
     const showToast = useShowToast()
     const loggedInUser = useRecoilValue(userAtom)
-    const [following, setFollowing] = useState(user.followers.includes(loggedInUser?._id))
-    const [updating, setUpdating] = useState(false)
+	const { handleFollowUnfollow, following, updating } = useFollowUnFollow(user);
 
     function copyUrl() {
         const currentUrl = window.location.href
@@ -20,49 +20,6 @@ export default function UserHeader({ user }) {
         })
     }
 
-    async function handleFollowUnfollow() {
-        if (!loggedInUser) {
-            showToast("Error", "Please login to follow", "error")
-            return
-        }
-
-        if(updating) return
-        setUpdating(true)
-
-        try {
-            const res = await fetch(`/api/users/follow/${user._id}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-
-            const data = await res.json()
-
-            if (data.error) {
-                showToast("Error", data.error, "error")
-                return
-            }
-
-            /// only for frontend simulate adding and removing followrs.
-            if (following) {
-                showToast("Success", `Unfollowed ${user.name}`, "success")
-                user.followers.pop()
-            } else {
-                showToast("Success", `Followed ${user.name}`, "success")
-                user.followers.push(loggedInUser?._id)
-
-            }
-
-            setFollowing(!following)
-
-
-        } catch (error) {
-            showToast("Error", error, "error")
-        }finally{
-            setUpdating(false)
-        }
-    }
 
     return (
         <VStack gap={4} alignItems={"start"}>
@@ -133,7 +90,7 @@ export default function UserHeader({ user }) {
                             </MenuButton>
                             <Portal>
                                 <MenuList bg={"gray.dark"}>
-                                    <MenuItem bg={"gray.dark"}  onClick={copyUrl}>Copy link</MenuItem>
+                                    <MenuItem bg={"gray.dark"} onClick={copyUrl}>Copy link</MenuItem>
                                 </MenuList>
                             </Portal>
                         </Menu>

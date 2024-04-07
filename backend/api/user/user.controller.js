@@ -110,7 +110,7 @@ export async function followUnFollowUser(req, res) {
 
     } catch (error) {
         res.status(500).json({ message: error.message })
-        console.log("error in logout", error.message)
+        console.log("error in followUnFollowUser", error.message)
     }
 }
 

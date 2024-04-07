@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import SuggestedUser from './SuggestedUser';
 import useShowToast from '../hooks/useShowToast';
 
-
 export default function SuggestedUsers() {
     const [loading, setLoading] = useState(false)
     const [suggestedUsers, setSuggestedUsers] = useState([])
