@@ -15,8 +15,8 @@ const useScoketMap = {}
 
 io.on("connection", (socket) => {
     console.log("user connected")
-
     const userId = socket.handshake.query.userId
+
     if (userId != "undefined") {
         useScoketMap[userId] = socket.id
     }
@@ -26,6 +26,8 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         console.log("user disconnect")
+        delete useScoketMap[userId]
+        io.emit("getOnlineUsers", Object.keys(useScoketMap))
     })
 })
 

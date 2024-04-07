@@ -9,6 +9,7 @@ import conversationsAtom from './../atoms/conversations.atom';
 import selectedConversationAtom from './../atoms/selectedConversation.atom';
 import { GiConversation } from "react-icons/gi";
 import userAtom from "../atoms/user.atom";
+import { useSocket } from "../context/SocketContext";
 
 export default function ChatPage() {
     const [conversations, setConversations] = useRecoilState(conversationsAtom)
@@ -19,6 +20,7 @@ export default function ChatPage() {
     const [searchText, setSearchText] = useState("")
     const [searchLoading, setSearchLoading] = useState(false)
     const showToast = useShowToast()
+    const { socket, onlineUsers } = useSocket()
 
     useEffect(() => {
         getConversations()
@@ -156,13 +158,10 @@ export default function ChatPage() {
 
                     {!loading && conversations.map((c) => {
                         return (
-                            <Conversation key={c._id} conversation={c} />
+                            <Conversation key={c._id} conversation={c} isOnline={c.participants[0]._id === loggedInUser?._id ?  onlineUsers.includes(c.participants[1]._id) : onlineUsers.includes(c.participants[0]._id)} />
                         )
                     })}
 
-                    {/* {!loading && !conversations && (
-                        <h1>no conversation...</h1>
-                    )} */}
 
                 </Flex>
 

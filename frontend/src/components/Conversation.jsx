@@ -1,15 +1,14 @@
-import { Avatar, AvatarBadge, Flex, Image, Stack, Text, WrapItem,useColorModeValue } from "@chakra-ui/react";
+import { Avatar, AvatarBadge, Flex, Image, Stack, Text, WrapItem, useColorModeValue } from "@chakra-ui/react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from './../atoms/user.atom';
 import { BsCheck2All } from 'react-icons/bs'
 import selectedConversationAtom from './../atoms/selectedConversation.atom';
 
-export default function Conversation({ conversation }) {
+export default function Conversation({ conversation, isOnline }) {
     const loggedInUser = useRecoilValue(userAtom)
     const user = conversation.participants[0]._id === loggedInUser._id ? conversation.participants[1] : conversation.participants[0]
     const lastMessage = conversation.lastMessage
     const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom)
-
     return (
         <Flex
             gap={4}
@@ -32,7 +31,7 @@ export default function Conversation({ conversation }) {
 
             <WrapItem>
                 <Avatar size={{ base: "xs", sm: "sm", md: "md" }} src={user.profilePic}>
-                    <AvatarBadge boxSize={"1em"} bg={"green.500"} />
+                    {isOnline ? <AvatarBadge boxSize={"1em"} bg={"green.500"} /> : <AvatarBadge boxSize={"1em"} bg={"red.500"} />}
                 </Avatar>
             </WrapItem>
 
