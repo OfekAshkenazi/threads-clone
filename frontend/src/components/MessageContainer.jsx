@@ -25,14 +25,43 @@ export default function MessageContainer() {
     }, [messages])
 
     useEffect(() => {
+        const lastMessageIsFromOtherUser = messages.length && messages[messages.length - 1].sender !== loggedInUser._id
+        if (lastMessageIsFromOtherUser) {
+            socket.emit("markMessagesAsSeen", {
+                conversationId: selectedConversation._id,
+                userId: selectedConversation.userId
+            })
+        }
+        socket.on("messagesSeen", ({ conversationId }) => {
+            if (selectedConversation._id === conversationId) {
+                setMessages((prevMessages) => {
+                    const updatedMessages = prevMessages.map((m) => {
+                        if (!m.seen) {
+                            return {
+                                ...m,
+                                seen: true
+                            }
+                        }
+                        return m
+                    })
+                    return updatedMessages
+                })
+            }
+        })
+        return () => {
+            socket.off("messagesSeen")
+        }
+    }, [loggedInUser?._id, messages])
+
+    useEffect(() => {
         socket?.on("newMessage", (message) => {
-            if(selectedConversation._id === message.conversationId) {
+            if (selectedConversation._id === message.conversationId) {
                 setMessages((prevMessages) => [...prevMessages, message])
             }
-            
+
             setConversations((prevConversations) => {
                 const updatedConverSations = prevConversations.map((c) => {
-                    if (c._id === selectedConversation._id) {
+                    if (c._id === message.conversationId) {
                         return {
                             ...c,
                             lastMessage: {

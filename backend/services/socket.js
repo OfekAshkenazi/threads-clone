@@ -1,6 +1,8 @@
 import { Server } from 'socket.io'
 import http from 'http'
 import express from 'express'
+import Message from '../models/messageModel.js'
+
 const app = express()
 const server = http.createServer(app)
 const io = new Server(server, {
@@ -26,12 +28,22 @@ io.on("connection", (socket) => {
     // convert the objectMap to an array and puts the keys in the array.
     io.emit("getOnlineUsers", Object.keys(userScoketMap))
 
+    socket.on("markMessagesAsSeen", async ({ conversationId, userId }) => {
+        try {
+            await Message.updateMany({ conversationId: conversationId, seen: false }, { $set: { seen: true } })
+            io.to(userScoketMap[userId]).emit("messagesSeen", { conversationId })
+
+        } catch (error) {
+            console.log(error)
+        }
+    })
 
     socket.on("disconnect", () => {
         console.log("user disconnect")
         delete userScoketMap[userId]
         io.emit("getOnlineUsers", Object.keys(userScoketMap))
     })
+
 })
 
 export { io, server, app }
