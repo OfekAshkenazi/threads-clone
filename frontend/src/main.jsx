@@ -8,6 +8,7 @@ import { extendTheme } from "@chakra-ui/theme-utils";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { ChakraProvider } from "@chakra-ui/react";
+import { SocketContextProvider } from "./context/SocketContext.jsx";
 
 const styles = {
   global: (props) => ({
@@ -32,20 +33,35 @@ const colors = {
   },
 }
 
-const mytheme = extendTheme({ config, styles, colors, fonts: {
-  heading: "Open Sans,sans-serif",
-  body: "Raleway,sans-serif",
-} })
+const mytheme = extendTheme({
+  config, styles, colors, fonts: {
+    heading: "Open Sans,sans-serif",
+    body: "Raleway,sans-serif",
+  }
+})
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+
     <RecoilRoot>
+
       <BrowserRouter>
+
         <ChakraProvider theme={mytheme}>
+
           <ColorModeScript initialColorMode={mytheme.config.initialColorMode} />
-          <App />
+
+          <SocketContextProvider>
+
+            <App />
+
+          </SocketContextProvider>
+
         </ChakraProvider>
+
       </BrowserRouter>
+
     </RecoilRoot>
+
   </React.StrictMode>
 )
