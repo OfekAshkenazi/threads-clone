@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
-import { Button, Flex, Spinner } from '@chakra-ui/react';
+import { Button, Flex, Spinner, Box } from '@chakra-ui/react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import userAtom from './../atoms/user.atom';
 import { useEffect, useState } from 'react';
 import useShowToast from '../hooks/useShowToast';
 import Post from './../components/Post';
 import postsAtom from '../atoms/posts.atom';
+import SuggestedUsers from '../components/SuggestedUsers';
 
 export default function HomePage() {
     const user = useRecoilValue(userAtom)
@@ -36,22 +37,28 @@ export default function HomePage() {
     }
 
     return (
-        <>
-            {!loading && posts.length === 0 && <h1>Follow some users to see the feed</h1>}
+        <Flex gap={10} alignItems={"flex-start"}>
+            <Box flex={70}>
+                {!loading && posts.length === 0 && <h1>Follow some users to see the feed</h1>}
 
-            {loading && (
-                <Flex justifyContent={"center"}>
-                    <Spinner size={"xl"} />
-                </Flex>
-            )}
+                {loading && (
+                    <Flex justifyContent={"center"}>
+                        <Spinner size={"xl"} />
+                    </Flex>
+                )}
 
-            {posts.map((post,idx) => {
-                return (
-                    <Post  key={post._id} post={post} postedBy={post.postedBy} />
-                )
-            })}
+                {posts.map((post, idx) => {
+                    return (
+                        <Post key={post._id} post={post} postedBy={post.postedBy} />
+                    )
+                })}
 
+            </Box>
 
-        </>
+            <Box flex={30} display={{ base: "none", md: "block", }} >
+                <SuggestedUsers />
+            </Box>
+
+        </Flex>
     )
 }
