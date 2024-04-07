@@ -1,7 +1,7 @@
 import { Avatar, Flex, useColorModeValue, Text, Image, Divider, SkeletonCircle, Skeleton } from "@chakra-ui/react";
 import Message from "./Message";
 import MessageInput from './MessageInput';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useShowToast from "../hooks/useShowToast";
 import selectedConversationAtom from "../atoms/selectedConversation.atom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
@@ -17,7 +17,12 @@ export default function MessageContainer() {
     const loggedInUser = useRecoilValue(userAtom)
     const { socket } = useSocket()
     const setConversations = useSetRecoilState(conversationsAtom)
+    const lastMessageRef = useRef(null)
 
+
+    useEffect(() => {
+        lastMessageRef.current?.scrollIntoView({ behavior: "smooth" })
+    }, [messages])
 
     useEffect(() => {
         socket?.on("newMessage", (message) => {
@@ -115,7 +120,10 @@ export default function MessageContainer() {
                 {!loading && messages && (
                     messages.map((message) => {
                         return (
-                            <Message key={message._id} message={message} ownMessage={loggedInUser._id === message.sender} />
+                            <Flex key={message._id} direction={"column"} ref={messages.length - 1 === messages.indexOf(message) ? lastMessageRef : null}>
+                                <Message key={message._id} message={message} ownMessage={loggedInUser._id === message.sender} />
+
+                            </Flex>
                         )
                     })
                 )}
