@@ -63,15 +63,14 @@ export default function Post({ post, postedBy }) {
 
         } catch (error) {
             showToast("Error", error, "error")
-            console.log(error)
 
         }
     }
 
     return (
-        <Link to={`/${user?.username}/post/${post._id}`} title='Go to post page'>
+        <Link to={`/${user?.username}/post/${post._id}`}>
 
-            <Flex gap={3} mb={4} py={5} >
+            <Flex gap={3} mb={4} py={5}>
 
                 <Flex flexDirection={"column"} alignItems={"center"}>
                     <Avatar size="md" name={user?.name} src={user?.profilePic} onClick={(e) => {
@@ -140,7 +139,7 @@ export default function Post({ post, postedBy }) {
                             </Text>
 
                             {loggedInUser?._id === user?._id && (
-                                <DeleteIcon size={20} onClick={handleDeletePost} />
+                                <DeleteIcon size={20} onClick={handleDeletePost} title="delete post" />
                             )}
 
 

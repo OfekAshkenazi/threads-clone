@@ -12,6 +12,7 @@ import userAtom from './atoms/user.atom'
 import UpdateProfilePage from './pages/UpdateProfilePage'
 import CreatePost from './components/CreatePost'
 import ChatPage from './pages/ChatPage'
+import SettingsPage from './pages/SettingsPage'
 
 export default function App() {
   const user = useRecoilValue(userAtom)
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/:username" element={user ? (<> <UserPage /> <CreatePost /> </>) : (<UserPage />)} />
           <Route path="/:username/post/:pid" element={<PostPage />} />
           <Route path="/chat" element={user ? <ChatPage /> : <Navigate to={"/auth"} />} />
+          <Route path="/settings" element={user ? <SettingsPage  /> : <Navigate to={"/auth"} />} />
 
         </Routes>
 

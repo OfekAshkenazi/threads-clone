@@ -23,6 +23,11 @@ export default function useGetUserProfile() {
                 showToast("Error", "Cannot find any user like that", "error")
                 return
             }
+            if(data.isFrozen) {
+                setUser(null)
+                return
+            }
+            
             setUser(data)
 
         } catch (error) {

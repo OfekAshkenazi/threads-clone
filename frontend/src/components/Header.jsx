@@ -4,8 +4,9 @@ import userAtom from './../atoms/user.atom';
 import { AiFillHome } from 'react-icons/ai'
 import { RxAvatar } from 'react-icons/rx'
 import { Link as RouterLink } from 'react-router-dom'
-import { FiLogIn, FiLogOut } from "react-icons/fi";
+import { FiLogOut } from "react-icons/fi";
 import { BsChatSquareText } from "react-icons/bs";
+import { IoSettingsOutline } from "react-icons/io5";
 
 import useLogout from "../hooks/useLogout";
 import authScreenAtom from './../atoms/auth.atom';
@@ -39,12 +40,17 @@ export default function Header() {
 
                 {loggedInUser &&
                     <Flex alignItems={"center"} gap={4} >
+
                         <Link as={RouterLink} to={`/${loggedInUser.username}`}>
                             <RxAvatar size={23} title="Profile page" />
                         </Link>
 
                         <Link as={RouterLink} to={`/chat`} position={"relative"} top={"0.5px"}>
                             <BsChatSquareText size={22} title="Chat" />
+                        </Link>
+
+                        <Link as={RouterLink} to={`/settings`} position={"relative"} bottom={"0.5px"}>
+                            <IoSettingsOutline  size={23} title="settings" />
                         </Link>
 
                         <Button size={"sm"} onClick={handleLogOut} title="Logout">
@@ -63,7 +69,7 @@ export default function Header() {
 
             </Flex>
 
-            <Divider my={4}/>
+            <Divider my={4} />
 
         </>
 

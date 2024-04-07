@@ -9,6 +9,7 @@ import userAtom from "../atoms/user.atom";
 import { useSocket } from './../context/SocketContext';
 import conversationsAtom from "../atoms/conversations.atom";
 import { IoCloseCircleOutline } from "react-icons/io5";
+import messageSound from '../assets/sounds/notification.mp3'
 
 
 export default function MessageContainer() {
@@ -60,6 +61,12 @@ export default function MessageContainer() {
             if (selectedConversation._id === message.conversationId) {
                 setMessages((prevMessages) => [...prevMessages, message])
             }
+
+            if(!document.hasFocus()) {
+                const sound = new Audio(messageSound)
+                sound.play()
+            }
+
 
             setConversations((prevConversations) => {
                 const updatedConverSations = prevConversations.map((c) => {

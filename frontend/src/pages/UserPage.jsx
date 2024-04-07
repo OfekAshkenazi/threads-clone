@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import UserHeader from "../components/UserHeader";
-import UserPost from "../components/UserPost";
 import { useParams } from "react-router-dom";
 import useShowToast from './../hooks/useShowToast';
 import { Flex, Spinner } from "@chakra-ui/react";
@@ -19,9 +18,10 @@ export default function UserPage() {
 
     useEffect(() => {
         getPosts()
-    }, [username, showToast, setPosts])
+    }, [username, showToast, setPosts, user])
 
     async function getPosts() {
+        if (!user) return
         setPosts([])
         try {
             const res = await fetch(`/api/posts/user/${username}`)
@@ -50,6 +50,7 @@ export default function UserPage() {
             </Flex>
         )
     }
+    
 
     if (!user && !loading) return <h1>User not found</h1>
     return (
