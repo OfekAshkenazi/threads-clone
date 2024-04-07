@@ -1,12 +1,13 @@
 import { getRecipientSocketId, io } from '../../services/socket.js';
 import Conversation from './../../models/conversationModel.js';
 import Message from './../../models/messageModel.js';
-
+import { v2 as cloudinary } from 'cloudinary';
 
 export async function sendMessage(req, res) {
     try {
         const { recipientId, message } = req.body
         const senderId = req.user._id
+        let { image } = req.body
 
         let conversation = await Conversation.findOne({ participants: { $all: [senderId, recipientId] } })
         if (!conversation) {
@@ -20,16 +21,22 @@ export async function sendMessage(req, res) {
             await conversation.save()
         }
 
+        if(image){
+            const resUrl = await cloudinary.uploader.upload(image)
+            image = resUrl.secure_url
+        }
+
         const newMessage = new Message({
             conversationId: conversation._id,
             sender: senderId,
-            text: message
+            text: message,
+            image: image || ""
         })
 
         await Promise.all([newMessage.save(), conversation.updateOne({ lastMessage: { text: message, sender: senderId } })])
 
         const recipientSocketId = getRecipientSocketId(recipientId)
-        if(recipientSocketId) {
+        if (recipientSocketId) {
             io.to(recipientSocketId).emit("newMessage", newMessage)
         }
 
