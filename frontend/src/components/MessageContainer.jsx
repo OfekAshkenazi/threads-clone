@@ -8,6 +8,8 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from "../atoms/user.atom";
 import { useSocket } from './../context/SocketContext';
 import conversationsAtom from "../atoms/conversations.atom";
+import { IoCloseCircleOutline } from "react-icons/io5";
+
 
 export default function MessageContainer() {
     const [loading, setLoading] = useState(true)
@@ -116,12 +118,21 @@ export default function MessageContainer() {
 
 
     return (
-        <Flex flex={70} bg={useColorModeValue("gary.100", "gray.dark")} borderRadius={"md"} flexDirection={"column"} p={2}>
+        <Flex flex={70} bg={useColorModeValue("gary.200", "gray.dark")} borderRadius={"md"} flexDirection={"column"} p={2}>
 
-            <Flex w={"full"} h={12} alignItems={"center"} gap={2}>
-                <Avatar src={selectedConversation.userProfilePic} size={"sm"} />
+            <Flex w={"full"} h={12} justifyContent={"space-between"} alignItems={"center"} gap={2} bg={useColorModeValue("gray.300", "gray.dark")} p={2} borderRadius={4}>
+                <Flex alignItems={"center"} gap={2}>
+                    <Avatar src={selectedConversation.userProfilePic} size={"sm"} />
+                    <Text display={"flex"} alignItems={"center"}>{selectedConversation.username} <Image src="/verified.png" h={4} ml={1} /></Text>
 
-                <Text display={"flex"} alignItems={"center"}>{selectedConversation.username} <Image src="/verified.png" h={4} ml={1} /></Text>
+                </Flex>
+
+                <IoCloseCircleOutline size={24} cursor={"pointer"} onClick={() => setSlectedConversation({
+                    _id: "",
+                    userId: "",
+                    username: "",
+                    userProfilePic: ""
+                })} />
 
             </Flex>
 
