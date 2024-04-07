@@ -14,14 +14,21 @@ export default function MessageContainer() {
     const [messages, setMessages] = useState([])
     const loggedInUser = useRecoilValue(userAtom)
 
-
-
     useEffect(() => {
         getMessages()
     }, [selectedConversation])
 
     async function getMessages() {
+        if (selectedConversation.mock) {
+            setMessages([])
+            setTimeout(() => {
+                setLoading(false)
+            }, 1500)
+            return
+        }
+
         setMessages([])
+
         try {
             const res = await fetch(`/api/messages/${selectedConversation.userId}`)
             const data = await res.json()
@@ -33,7 +40,7 @@ export default function MessageContainer() {
 
 
         } catch (error) {
-            console.log(error)
+            showToast("Error", error, "error")
         } finally {
 
             setLoading(false)
@@ -75,7 +82,7 @@ export default function MessageContainer() {
                     })
                 )}
 
-                {!loading && (
+                {!loading &&  messages && (
                     messages.map((message) => {
                         return (
                             <Message key={message._id} message={message} ownMessage={loggedInUser._id === message.sender} />
@@ -86,7 +93,7 @@ export default function MessageContainer() {
 
             </Flex>
 
-            <MessageInput setMessages={setMessages}/>
+            <MessageInput setMessages={setMessages} />
         </Flex>
     )
 }

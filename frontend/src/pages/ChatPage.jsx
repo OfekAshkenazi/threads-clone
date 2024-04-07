@@ -25,6 +25,12 @@ export default function ChatPage() {
     }, [setConversations])
 
     async function getConversations() {
+        setSlectedConversation({
+            _id: "",
+            userId: "",
+            username: "",
+            userProfilePic: ""
+        })
         try {
             const res = await fetch("/api/messages/conversations")
             const data = await res.json()
@@ -72,6 +78,25 @@ export default function ChatPage() {
                 })
                 return
             }
+
+            // console.log(searchedUser)
+
+            const mockConversation = {
+                _id: Date.now(),
+                mock: true,
+                lastMessage: {
+                    text: "",
+                    sender: ""
+                },
+                participants: [{
+                    _id: searchedUser._id,
+                    username: searchedUser.username,
+                    profilePic: searchedUser.profilePic
+                }]
+            }
+
+            setConversations((prevConversations) => [mockConversation, ...prevConversations])
+
 
 
 

@@ -5,11 +5,10 @@ import { BsCheck2All } from 'react-icons/bs'
 import selectedConversationAtom from './../atoms/selectedConversation.atom';
 
 export default function Conversation({ conversation }) {
-    const user = conversation.participants[0]
-    const lastMessage = conversation.lastMessage
     const loggedInUser = useRecoilValue(userAtom)
+    const user = conversation.participants[0]._id === loggedInUser._id ? conversation.participants[1] : conversation.participants[0]
+    const lastMessage = conversation.lastMessage
     const [selectedConversation, setSelectedConversation] = useRecoilState(selectedConversationAtom)
-    // const user = conversation.participants[0]._id === loggedInUser._id ? conversation.participants[1] : conversation.participants[0]
 
     return (
         <Flex
@@ -25,7 +24,8 @@ export default function Conversation({ conversation }) {
                 _id: conversation._id,
                 userId: user._id,
                 username: user.username,
-                userProfilePic: user.profilePic
+                userProfilePic: user.profilePic,
+                mock: conversation.mock
             })}
             bg={selectedConversation?._id === conversation._id && "gray.600"}
         >
