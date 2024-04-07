@@ -8,12 +8,12 @@ import postRoutes from './api/post/post.routes.js'
 import messageRoutes from './api/message/message.routes.js'
 
 import { v2 as cloudinary } from 'cloudinary'
+import { app, server } from "./services/socket.js"
 
 dotenv.config()
 
 connectDB()
 
-const app = express()
 
 const PORT = process.env.PORT || 5000
 
@@ -37,4 +37,4 @@ app.use("/api/messages", messageRoutes)
 
 
 
-app.listen(PORT, () => { console.log(`server running on localhost:${PORT}`) })
+server.listen(PORT, () => { console.log(`server running on localhost:${PORT}`) })
