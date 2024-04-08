@@ -10,10 +10,12 @@ import messageRoutes from './api/message/message.routes.js'
 
 import { v2 as cloudinary } from 'cloudinary'
 import { app, server } from "./services/socket.js"
+import job from "./services/cron.js"
 
 dotenv.config()
 
 connectDB()
+job.start()
 
 
 const PORT = process.env.PORT || 5000
